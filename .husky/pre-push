@@ -1,0 +1,1 @@
+NODE_COMPILE_CACHE=./node_modules/.cache node .husky/pre-push.mjs

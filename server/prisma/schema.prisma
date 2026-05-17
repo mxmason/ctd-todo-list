@@ -1,0 +1,35 @@
+// Prisma schema for the server. Run `npm run db:migrate` after editing to
+// create a migration and apply it; `npm run db:generate` refreshes the client.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  runtime             = "nodejs"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String @id @default(uuid())
+  username     String @unique
+  passwordHash String @map("password_hash")
+  todos        Todo[]
+
+  @@map("users")
+}
+
+model Todo {
+  id        String   @id @default(uuid())
+  title     String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("todos")
+}

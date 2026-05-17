@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+*.log
+.claude/
+
+# Generated Prisma client (rebuilt by `prisma generate` / postinstall)
+server/src/generated/
+
+# Local environment files (keep .env.example committed)
+.env
+server/.env
