@@ -1,6 +1,6 @@
 import * as React from "react";
 
-export function App() {
+export function Home() {
 	React.useEffect(() => {
 		fetch("/api/hello/World")
 			.then((res) => res.json())
