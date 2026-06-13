@@ -7,10 +7,11 @@
 		"allowSyntheticDefaultImports": true,
 		"allowImportingTsExtensions": true,
 		"paths": {
-			"#shared": ["../shared/src/index.ts"]
+			"#shared": ["../shared/dist/index.d.ts"]
 		},
 		"incremental": true,
 		"tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.tsbuildinfo"
 	},
+	"references": [{ "path": "../shared" }],
 	"include": ["src"]
 }
