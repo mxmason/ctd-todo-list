@@ -3,6 +3,13 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-	"*.{ts,tsx}": [() => "npm run typecheck", "eslint --fix"],
-	"*.{css,json,js,ts,tsx}": ["prettier --write"],
+	"server/src/**/*.{ts,tsx}": [
+		() => "node_modules/.bin/tsgo -b server/tsconfig.json",
+		"eslint --fix",
+	],
+	"client/src/**/*.{ts,tsx}": [
+		() => "node_modules/.bin/tsgo -b client/tsconfig.json",
+		"eslint --fix",
+	],
+	"**/*.{css,json,js,ts,tsx}": ["prettier --write"],
 };
