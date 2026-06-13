@@ -9,9 +9,12 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
+		"paths": {
+			"#shared": ["../shared/src/index.ts"]
+		},
 		"composite": true,
 		"incremental": true,
 		"tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.app.tsbuildinfo"
 	},
-	"include": ["src"]
+	"include": ["src", "../shared/src"]
 }

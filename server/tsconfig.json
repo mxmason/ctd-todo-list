@@ -6,6 +6,9 @@
 		"types": ["node"],
 		"allowSyntheticDefaultImports": true,
 		"allowImportingTsExtensions": true,
+		"paths": {
+			"#shared": ["../shared/src/index.ts"]
+		},
 		"incremental": true,
 		"tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.tsbuildinfo"
 	},

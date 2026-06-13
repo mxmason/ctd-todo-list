@@ -3,6 +3,9 @@
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
+	"imports": {
+		"#shared": "shared"
+	},
 	"scripts": {
 		"dev": "vite",
 		"build": "tsgo -b && vite build",
@@ -12,6 +15,8 @@
 	},
 	"dependencies": {
 		"@babel/core": "7.29.0",
+		"shared": "*",
+		"zod": "4.4.3",
 		"@rolldown/plugin-babel": "0.2.3",
 		"@vitejs/plugin-react": "6.0.2",
 		"babel-plugin-react-compiler": "1.0.0",

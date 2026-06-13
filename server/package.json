@@ -7,6 +7,7 @@
 	"type": "module",
 	"imports": {
 		"#app": "./src/app.ts",
+		"#shared": "shared",
 		"#*": "./src/*"
 	},
 	"scripts": {
@@ -27,6 +28,7 @@
 	},
 	"dependencies": {
 		"@prisma/adapter-pg": "7.8.0",
+		"shared": "*",
 		"@prisma/client": "7.8.0",
 		"cors": "2.8.6",
 		"express": "5.2.1",
