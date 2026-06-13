@@ -1,26 +1,12 @@
 import { Router } from "express";
-import { z } from "zod";
+
+import { credentialsSchema } from "#shared";
 
 import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";
 import { authError } from "./errors.ts";
 import { requireAuth } from "./middleware.ts";
 import { createUser, findUserById, findUserByUsername } from "./store.ts";
-
-const credentials = z.object({
-	// Whitelist safe characters so stored usernames can never carry HTML/JS
-	// markup — defense-in-depth against stored XSS in any client that renders
-	// usernames as HTML.
-	username: z
-		.string()
-		.min(3)
-		.max(32)
-		.regex(
-			/^[a-zA-Z0-9._-]+$/,
-			"username may only contain letters, numbers, and . _ -",
-		),
-	password: z.string().min(8).max(128),
-});
 
 // Public projection of a user — keeps passwordHash from ever reaching a client.
 const toPublicUser = ({ id, username }: { id: string; username: string }) => ({
@@ -39,13 +25,13 @@ function timingDecoyHash(): Promise<string> {
 export const userRoutes = Router();
 
 userRoutes.post("/register", async (req, res) => {
-	const { username, password } = credentials.parse(req.body);
+	const { username, password } = credentialsSchema.parse(req.body);
 	const passwordHash = await hashPassword(password);
 	res.status(201).json(toPublicUser(await createUser(username, passwordHash)));
 });
 
 userRoutes.post("/login", async (req, res) => {
-	const { username, password } = credentials.parse(req.body);
+	const { username, password } = credentialsSchema.parse(req.body);
 	const user = await findUserByUsername(username);
 	const hash = user?.passwordHash ?? (await timingDecoyHash());
 	const ok = await verifyPassword(password, hash);

@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { z } from "zod";
 
 import { requireAuth } from "#features/users/middleware.ts";
 import { AppError } from "#lib/app-error.ts";
+import { newTodoSchema, patchTodoSchema } from "#shared";
 
 import {
 	createTodo,
@@ -11,9 +11,6 @@ import {
 	listTodos,
 	setTodoCompleted,
 } from "./store.ts";
-
-const newTodo = z.object({ title: z.string().min(1).max(200) });
-const patchTodo = z.object({ completed: z.boolean() });
 
 const notFound = (): AppError =>
 	new AppError(404, "not_found", "todo not found");
@@ -29,17 +26,17 @@ todoRoutes.get("/", async (req, res) => {
 todoRoutes.post("/", async (req, res) => {
 	if (Array.isArray(req.body)) {
 		const titles = req.body.map((item) => {
-			const { title } = newTodo.parse(item);
+			const { title } = newTodoSchema.parse(item);
 			return title;
 		});
 		return res.status(201).json(await createManyTodos(req.user!.id, titles));
 	}
-	const { title } = newTodo.parse(req.body);
+	const { title } = newTodoSchema.parse(req.body);
 	res.status(201).json(await createTodo(req.user!.id, title));
 });
 
 todoRoutes.patch("/:id", async (req, res) => {
-	const { completed } = patchTodo.parse(req.body);
+	const { completed } = patchTodoSchema.parse(req.body);
 	const todo = await setTodoCompleted(req.user!.id, req.params.id, completed);
 	if (!todo) throw notFound();
 	res.json(todo);
