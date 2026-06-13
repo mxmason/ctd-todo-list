@@ -12,22 +12,23 @@ const scryptAsync = promisify(scrypt);
 const SALT_BYTES = 16;
 const KEY_BYTES = 64;
 
-/** How long a session stays valid. Shared by the token's `exp` and the cookie's Max-Age. */
 export const SESSION_TTL_SECONDS = 60 * 60; // 1 hour
 
 const JWT_ALG = "HS256";
 const AUTH_SECRET = resolveSecret();
+
 // jose wants the HS256 secret as bytes; encode once at module load.
 const SIGNING_KEY = new TextEncoder().encode(AUTH_SECRET);
 
-/** Hash a password with a per-user random salt. Returns `"<saltHex>:<hashHex>"`. */
+/** Hash a password with a per-user random salt.
+ * Returns `"<saltHex>:<hashHex>"`.
+ */
 export async function hashPassword(password: string): Promise<string> {
 	const salt = randomBytes(SALT_BYTES);
 	const derived = (await scryptAsync(password, salt, KEY_BYTES)) as Buffer;
 	return `${salt.toString("hex")}:${derived.toString("hex")}`;
 }
 
-/** Constant-time check of a password against a stored `"<saltHex>:<hashHex>"`. */
 export async function verifyPassword(
 	password: string,
 	stored: string,
@@ -48,7 +49,6 @@ export async function verifyPassword(
 	return timingSafeEqual(derived, expected);
 }
 
-/** Issue a stateless, HS256-signed JWT session token for a user id. */
 export function signToken(userId: string): Promise<string> {
 	return new SignJWT({})
 		.setProtectedHeader({ alg: JWT_ALG })
@@ -58,7 +58,6 @@ export function signToken(userId: string): Promise<string> {
 		.sign(SIGNING_KEY);
 }
 
-/** Verify a JWT's signature and expiry. Throws an AppError on any problem. */
 export async function verifyToken(token: string): Promise<{ userId: string }> {
 	try {
 		// Pinning the algorithm blocks the classic `alg:none` / alg-confusion JWT attacks.

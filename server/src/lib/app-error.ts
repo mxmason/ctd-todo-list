@@ -27,6 +27,5 @@ export class AppError extends Error {
 	}
 }
 
-/** Type guard used by the error handler and by rethrow logic. */
 export const isAppError = (err: unknown): err is AppError =>
 	err instanceof AppError;

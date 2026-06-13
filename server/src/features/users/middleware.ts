@@ -13,7 +13,6 @@ declare global {
 	}
 }
 
-/** Gate a route: require a valid session cookie, else 401 via errorHandler. */
 export const requireAuth: RequestHandler = async (req, _res, next) => {
 	const token = readSessionCookie(req);
 	if (!token) {

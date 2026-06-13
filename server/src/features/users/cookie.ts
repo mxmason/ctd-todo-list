@@ -4,7 +4,6 @@ import { SESSION_TTL_SECONDS } from "./crypto.ts";
 
 const COOKIE_NAME = "session";
 
-/** Read the session cookie from the raw Cookie header — no cookie-parser needed. */
 export function readSessionCookie(req: Request): string | null {
 	const header = req.headers.cookie;
 	if (!header) return null;
@@ -19,12 +18,10 @@ export function readSessionCookie(req: Request): string | null {
 	return null;
 }
 
-/** Build a Set-Cookie value carrying the session token. */
 export function buildSessionCookie(token: string): string {
 	return serialize(encodeURIComponent(token), SESSION_TTL_SECONDS);
 }
 
-/** Build a Set-Cookie value that immediately expires the session cookie. */
 export function clearSessionCookie(): string {
 	return serialize("", 0);
 }

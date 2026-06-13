@@ -13,7 +13,6 @@ export interface ErrorBody {
 	details?: unknown;
 }
 
-/** Match a body-parser error by its `type` tag (e.g. `entity.too.large`). */
 const isBodyParserError = (err: unknown, type: string): err is Error =>
 	err instanceof Error && "type" in err && err.type === type;
 

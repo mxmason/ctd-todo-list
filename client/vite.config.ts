@@ -3,6 +3,11 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+	css: {
+		modules: {
+			localsConvention: "camelCase",
+		},
+	},
 	plugins: [
 		babel({
 			include: /\.[jt]sx?$/,
