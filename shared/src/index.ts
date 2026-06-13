@@ -1,11 +1,10 @@
 import { z } from "zod";
 
-// Response types — wire format received by the client over HTTP
-
 export const userSchema = z.object({
 	id: z.string(),
 	username: z.string(),
 });
+
 export type User = z.infer<typeof userSchema>;
 
 export const todoSchema = z.object({
@@ -17,12 +16,9 @@ export const todoSchema = z.object({
 });
 export type Todo = z.infer<typeof todoSchema>;
 
-// Input schemas — canonical validation rules shared between server and client
-
 export const credentialsSchema = z.object({
-	// Whitelist safe characters so stored usernames can never carry HTML/JS
-	// markup — defense-in-depth against stored XSS in any client that renders
-	// usernames as HTML.
+	// Whitelist safe characters so stored usernames
+	// can never carry HTML/JS
 	username: z
 		.string()
 		.min(3)
