@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 
-import { requireAuth } from "#features/auth/middleware.ts";
+import { requireAuth } from "#features/users/middleware.ts";
 import { AppError } from "#lib/app-error.ts";
 
 import {

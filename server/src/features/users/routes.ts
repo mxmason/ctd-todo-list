@@ -36,15 +36,15 @@ function timingDecoyHash(): Promise<string> {
 	return dummyHash;
 }
 
-export const authRoutes = Router();
+export const userRoutes = Router();
 
-authRoutes.post("/register", async (req, res) => {
+userRoutes.post("/register", async (req, res) => {
 	const { username, password } = credentials.parse(req.body);
 	const passwordHash = await hashPassword(password);
 	res.status(201).json(toPublicUser(await createUser(username, passwordHash)));
 });
 
-authRoutes.post("/login", async (req, res) => {
+userRoutes.post("/login", async (req, res) => {
 	const { username, password } = credentials.parse(req.body);
 	const user = await findUserByUsername(username);
 	const hash = user?.passwordHash ?? (await timingDecoyHash());
@@ -55,12 +55,12 @@ authRoutes.post("/login", async (req, res) => {
 	res.json(toPublicUser(user));
 });
 
-authRoutes.post("/logout", (_req, res) => {
+userRoutes.post("/logout", (_req, res) => {
 	res.setHeader("Set-Cookie", clearSessionCookie());
 	res.status(204).end();
 });
 
-authRoutes.get("/me", requireAuth, async (req, res) => {
+userRoutes.get("/me", requireAuth, async (req, res) => {
 	const user = req.user && (await findUserById(req.user.id));
 	if (!user) throw authError("session user no longer exists");
 	res.json(toPublicUser(user));

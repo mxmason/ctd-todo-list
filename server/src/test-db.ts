@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { afterAll, afterEach } from "vitest";
 
-import { signToken } from "#features/auth/crypto.ts";
+import { signToken } from "#features/users/crypto.ts";
 import { prisma } from "#lib/prisma.ts";
 
 /**

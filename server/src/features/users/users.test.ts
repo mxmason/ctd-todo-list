@@ -12,12 +12,12 @@ function freshUser() {
 	return { username: `user${counter}`, password: "supersecret" };
 }
 
-describe("auth", () => {
+describe("users", () => {
 	useTestDb();
 
 	test("registers a new user", async () => {
 		const user = freshUser();
-		const res = await api().post("/api/auth/register").send(user).expect(201);
+		const res = await api().post("/api/users/register").send(user).expect(201);
 		expect(res.body.username).toBe(user.username);
 		expect(res.body.id).toEqual(expect.any(String));
 		expect(res.body).not.toHaveProperty("passwordHash");
@@ -25,14 +25,14 @@ describe("auth", () => {
 
 	test("rejects a duplicate username with 409", async () => {
 		const user = freshUser();
-		await api().post("/api/auth/register").send(user).expect(201);
-		const res = await api().post("/api/auth/register").send(user).expect(409);
+		await api().post("/api/users/register").send(user).expect(201);
+		const res = await api().post("/api/users/register").send(user).expect(409);
 		expect(res.body.code).toBe("conflict");
 	});
 
 	test("rejects a too-short password with 400", async () => {
 		const res = await api()
-			.post("/api/auth/register")
+			.post("/api/users/register")
 			.send({ username: "shortpw", password: "tiny" })
 			.expect(400);
 		expect(res.body.code).toBe("invalid_argument");
@@ -40,9 +40,9 @@ describe("auth", () => {
 
 	test("login with bad password returns generic 401", async () => {
 		const user = freshUser();
-		await api().post("/api/auth/register").send(user).expect(201);
+		await api().post("/api/users/register").send(user).expect(201);
 		const res = await api()
-			.post("/api/auth/login")
+			.post("/api/users/login")
 			.send({ username: user.username, password: "wrongpassword" })
 			.expect(401);
 		expect(res.body).toEqual({
@@ -53,7 +53,7 @@ describe("auth", () => {
 
 	test("login with unknown user returns the same generic 401", async () => {
 		const res = await api()
-			.post("/api/auth/login")
+			.post("/api/users/login")
 			.send({ username: "nobody-here", password: "supersecret" })
 			.expect(401);
 		expect(res.body.message).toBe("invalid username or password");
@@ -69,34 +69,34 @@ describe("auth", () => {
 		const agent = makeAgent();
 
 		const register = await agent
-			.post("/api/auth/register")
+			.post("/api/users/register")
 			.send(user)
 			.expect(201);
 		expect(register.body).not.toHaveProperty("passwordHash");
 
-		const login = await agent.post("/api/auth/login").send(user).expect(200);
+		const login = await agent.post("/api/users/login").send(user).expect(200);
 		expect(login.body).not.toHaveProperty("passwordHash");
 
-		const me = await agent.get("/api/auth/me").expect(200);
+		const me = await agent.get("/api/users/me").expect(200);
 		expect(me.body).not.toHaveProperty("passwordHash");
 	});
 
 	test("login grants access to protected routes, logout revokes it", async () => {
 		const user = freshUser();
 		const agent = makeAgent(); // persists the session cookie
-		await agent.post("/api/auth/register").send(user).expect(201);
+		await agent.post("/api/users/register").send(user).expect(201);
 
-		const login = await agent.post("/api/auth/login").send(user).expect(200);
+		const login = await agent.post("/api/users/login").send(user).expect(200);
 		expect(login.headers["set-cookie"][0]).toMatch(/HttpOnly/);
 		expect(login.headers["set-cookie"][0]).toMatch(/SameSite=Strict/);
 
 		const todos = await agent.get("/api/todos").expect(200);
 		expect(Array.isArray(todos.body)).toBe(true);
 
-		const me = await agent.get("/api/auth/me").expect(200);
+		const me = await agent.get("/api/users/me").expect(200);
 		expect(me.body.username).toBe(user.username);
 
-		await agent.post("/api/auth/logout").expect(204);
+		await agent.post("/api/users/logout").expect(204);
 		await agent.get("/api/todos").expect(401);
 	});
 
