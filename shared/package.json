@@ -6,6 +6,9 @@
 	"exports": {
 		".": "./src/index.ts"
 	},
+	"scripts": {
+		"lint": "eslint . --fix"
+	},
 	"dependencies": {
 		"zod": "4.4.3"
 	}

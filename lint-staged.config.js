@@ -11,5 +11,6 @@ export default {
 		() => "node_modules/.bin/tsgo -b client/tsconfig.json",
 		"eslint --fix",
 	],
+	"shared/src/**/*.{ts,tsx}": ["eslint --fix"],
 	"**/*.{css,json,js,ts,tsx}": ["prettier --write"],
 };
