@@ -6,6 +6,7 @@ import { AppError } from "#lib/app-error.ts";
 
 import {
 	createTodo,
+	createManyTodos,
 	deleteTodo,
 	listTodos,
 	setTodoCompleted,
@@ -26,6 +27,13 @@ todoRoutes.get("/", async (req, res) => {
 });
 
 todoRoutes.post("/", async (req, res) => {
+	if (Array.isArray(req.body)) {
+		const titles = req.body.map((item) => {
+			const { title } = newTodo.parse(item);
+			return title;
+		});
+		return res.status(201).json(await createManyTodos(req.user!.id, titles));
+	}
 	const { title } = newTodo.parse(req.body);
 	res.status(201).json(await createTodo(req.user!.id, title));
 });

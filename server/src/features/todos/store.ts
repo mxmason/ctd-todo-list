@@ -24,6 +24,11 @@ export const listTodos = (userId: string) =>
 export const createTodo = (userId: string, title: string) =>
 	prisma.todo.create({ data: { userId, title } });
 
+export const createManyTodos = (userId: string, titles: string[]) =>
+	prisma.todo.createMany({
+		data: titles.map((title) => ({ userId, title })),
+	});
+
 /** Apply a partial update to an owned todo; null when no owned row matched. */
 export const updateTodo = (
 	userId: string,
