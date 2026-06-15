@@ -6,9 +6,8 @@
 	"license": "MPL-2.0",
 	"type": "module",
 	"imports": {
-		"#app": "./src/app.ts",
-		"#shared": "shared",
-		"#*": "./src/*"
+		"#*": "./src/*",
+		"#shared/*": "shared/*"
 	},
 	"scripts": {
 		"dev": "node --env-file=.env --watch src/index.ts",

@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { requireAuth } from "#features/users/middleware.ts";
 import { AppError } from "#lib/app-error.ts";
-import { newTodoSchema, patchTodoSchema } from "#shared";
+import { newTodoSchema, patchTodoSchema } from "#shared/schemas";
 
 import {
 	createTodo,

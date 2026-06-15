@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { credentialsSchema } from "#shared";
+import { credentialsSchema } from "#shared/schemas";
 
 import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";

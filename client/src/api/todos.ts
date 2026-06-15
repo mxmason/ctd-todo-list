@@ -1,4 +1,4 @@
-import { type Todo } from "#shared";
+import { type Todo } from "#shared/schemas";
 
 import { apiFetch } from "./utils.ts";
 
