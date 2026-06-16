@@ -1,12 +1,12 @@
 import { Router } from "express";
 
 import { validate } from "#lib/app-error.ts";
+import { requireAuth } from "#middleware/auth.ts";
 import { credentialsSchema } from "#shared/schemas";
 
 import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";
 import { authError } from "./errors.ts";
-import { requireAuth } from "./middleware.ts";
 import { createUser, findUserById, findUserByUsername } from "./store.ts";
 
 // Public projection of a user — keeps passwordHash from ever reaching a client.

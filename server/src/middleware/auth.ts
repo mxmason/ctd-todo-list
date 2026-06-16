@@ -1,8 +1,8 @@
 import type { RequestHandler } from "express";
 
-import { readSessionCookie } from "./cookie.ts";
-import { verifyToken } from "./crypto.ts";
-import { authError } from "./errors.ts";
+import { readSessionCookie } from "#features/users/cookie.ts";
+import { verifyToken } from "#features/users/crypto.ts";
+import { authError } from "#features/users/errors.ts";
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

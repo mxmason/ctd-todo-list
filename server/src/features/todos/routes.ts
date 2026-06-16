@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { requireAuth } from "#features/users/middleware.ts";
-import { AppError, validate } from "#lib/app-error.ts";
+import { validate } from "#lib/app-error.ts";
+import { requireAuth } from "#middleware/auth.ts";
 import { newTodoSchema, patchTodoSchema } from "#shared/schemas";
 
+import { todoNotFound } from "./errors.ts";
 import {
 	createTodo,
 	createManyTodos,
@@ -11,9 +12,6 @@ import {
 	listTodos,
 	setTodoCompleted,
 } from "./store.ts";
-
-const notFound = (): AppError =>
-	new AppError(404, "not_found", "todo not found");
 
 export const todoRoutes = Router();
 
@@ -38,12 +36,12 @@ todoRoutes.post("/", async (req, res) => {
 todoRoutes.patch("/:id", async (req, res) => {
 	const { completed } = validate(patchTodoSchema, req.body);
 	const todo = await setTodoCompleted(req.user!.id, req.params.id, completed);
-	if (!todo) throw notFound();
+	if (!todo) throw todoNotFound();
 	res.json(todo);
 });
 
 todoRoutes.delete("/:id", async (req, res) => {
 	const todo = await deleteTodo(req.user!.id, req.params.id);
-	if (!todo) throw notFound();
+	if (!todo) throw todoNotFound();
 	res.status(204).end();
 });
