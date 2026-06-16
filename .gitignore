@@ -3,6 +3,7 @@ dist
 .DS_Store
 *.log
 .claude/
+.eslintcache
 
 # Generated Prisma client (rebuilt by `prisma generate` / postinstall)
 server/src/generated/

@@ -14,7 +14,7 @@
 		"start": "node --env-file=.env src/index.ts",
 		"test": "vitest run --passWithNoTests",
 		"typecheck": "tsgo -b",
-		"lint": "eslint . --fix",
+		"lint": "eslint --cache . --fix",
 		"db:generate": "prisma generate",
 		"db:migrate": "prisma migrate dev",
 		"db:deploy": "prisma migrate deploy",

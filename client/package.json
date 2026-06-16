@@ -11,7 +11,7 @@
 		"build": "tsgo -b && vite build",
 		"preview": "vite preview",
 		"typecheck": "tsgo -b",
-		"lint": "eslint . --fix"
+		"lint": "eslint --cache . --fix"
 	},
 	"dependencies": {
 		"@babel/core": "7.29.7",
