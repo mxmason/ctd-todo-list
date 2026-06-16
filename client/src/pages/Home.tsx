@@ -1,11 +1,13 @@
+import { AddTodoForm } from "#components/AddTodoForm.tsx";
 import { useTodos } from "#hooks/todos.ts";
 
 export function Home() {
-	const { data: todos, error, loading } = useTodos();
+	const { data: todos, error, loading, refetch } = useTodos();
 
 	return (
 		<>
 			<h2>My list</h2>
+			<AddTodoForm onSuccess={refetch} />
 			{error && (
 				<p style={{ color: "red" }}>Failed to load todos: {error.message}</p>
 			)}

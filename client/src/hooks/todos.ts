@@ -12,7 +12,9 @@ export const useTodos = () => {
 		run(getTodos());
 	}, [run]);
 
-	return rest;
+	const refetch = () => run(getTodos());
+
+	return { refetch, ...rest };
 };
 
 export const useCreateTodo = () => {
