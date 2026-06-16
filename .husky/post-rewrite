@@ -1,8 +1,8 @@
 # post-rewrite fires after `git commit --amend` and `git rebase`.
 # pre-commit already covers amend, so we only act on rebase here.
 # Note: any fixups land in the working tree, not in the rewritten commits.
-# Re-stage and amend / fixup manually if lint-staged makes changes.
+# Re-stage and amend / fixup manually if nano-staged makes changes.
 
 [ "$1" = "rebase" ] || exit 0
 
-npx lint-staged --diff="HEAD@{1}..HEAD"
+./node_modules/.bin/nano-staged --diff HEAD@{1} HEAD
