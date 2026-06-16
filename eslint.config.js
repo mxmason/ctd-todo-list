@@ -21,9 +21,14 @@ export default defineConfig(
 			"import-x/resolver-next": [createNodeResolver({ tsconfig: "auto" })],
 		},
 		rules: {
+			"object-shorthand": ["warn", "always"],
 			// Delegated to TypeScript's noUnusedLocals/noUnusedParameters, which counts
 			// JSDoc {@link} references as usage and ignores _-prefixed params natively.
 			"@typescript-eslint/no-unused-vars": "off",
+			"@typescript-eslint/consistent-type-imports": [
+				"error",
+				{ prefer: "type-imports", fixStyle: "inline-type-imports" },
+			],
 			"import-x/order": [
 				"error",
 				{
@@ -53,8 +58,8 @@ export default defineConfig(
 			perfectionist,
 		},
 		rules: {
-			"react-refresh/only-export-components": "warn",
 			"@eslint-react/web-api-no-leaked-fetch": "off",
+			"react-refresh/only-export-components": "warn",
 			"perfectionist/sort-jsx-props": [
 				"error",
 				{
