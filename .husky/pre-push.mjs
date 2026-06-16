@@ -1,7 +1,9 @@
 import { execFile, spawn } from "node:child_process";
+import console from "node:console";
 import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import process from "node:process";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
