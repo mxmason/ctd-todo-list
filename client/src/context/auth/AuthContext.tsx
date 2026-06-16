@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import * as React from "react";
 
 import * as usersApi from "#api/users.ts";
 import { type Result } from "#api/utils.ts";
@@ -12,11 +12,11 @@ function hasSessionIndicator(): boolean {
 		.some((c) => c.trim().startsWith("logged_in="));
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-	const [user, setUser] = useState<User | null>(null);
-	const [isLoading, setIsLoading] = useState(hasSessionIndicator);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+	const [user, setUser] = React.useState<User | null>(null);
+	const [isLoading, setIsLoading] = React.useState(hasSessionIndicator);
 
-	useEffect(() => {
+	React.useEffect(() => {
 		if (!hasSessionIndicator()) return;
 
 		usersApi.me().then((result) => {
