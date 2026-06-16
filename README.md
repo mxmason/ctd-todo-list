@@ -104,6 +104,8 @@ All scripts run from the repo root unless noted.
 | `npm run db:studio --workspace=server` | Open Prisma Studio (DB browser) |
 | `npm run db:deploy --workspace=server` | Apply migrations in production (no prompts) |
 
+> **Deployment note:** `prisma` (the CLI) is a devDependency. `db:deploy` must run in an environment where devDependencies are installed, or where the `prisma` package is available by other means. A plain `npm install --omit=dev` followed by `db:deploy` will fail.
+
 ## Testing
 
 ```bash
