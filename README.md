@@ -15,7 +15,7 @@ A full-stack todo application. TypeScript monorepo with an Express API and a Rea
 ## Project Structure
 
 ```
-ctd-capstone/
+ctd-todo-list/
 ├── client/      # React frontend (Vite)
 ├── server/      # Express API (Prisma + Postgres)
 ├── shared/      # Types and utilities shared between workspaces
@@ -39,14 +39,15 @@ brew services start postgresql@16
 ```bash
 psql postgres
 ```
+> **Tip:** `psql` with no arguments tries to connect to a database named after your OS user, which may not exist. Always pass a database name (e.g. `psql postgres`) or run `createdb $(whoami)` once to create a default.
 ```sql
 CREATE USER postgres WITH PASSWORD 'postgres' CREATEDB;
 ```
 
 **Create the databases** (the test DB must be separate — the test suite truncates its tables between runs):
 ```sql
-CREATE DATABASE ctd_capstone OWNER postgres;
-CREATE DATABASE ctd_capstone_test OWNER postgres;
+CREATE DATABASE ctd_todo_list OWNER postgres;
+CREATE DATABASE ctd_todo_list_test OWNER postgres;
 \q
 ```
 
@@ -82,8 +83,8 @@ All env vars live in `server/.env` (loaded via `node --env-file`). See [server/.
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `DATABASE_URL` | Yes | `postgresql://postgres:postgres@localhost:5432/ctd_capstone` | Main Postgres connection string |
-| `TEST_DATABASE_URL` | For tests | `postgresql://postgres:postgres@localhost:5432/ctd_capstone_test` | Separate DB used by the test suite |
+| `DATABASE_URL` | Yes | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list` | Main Postgres connection string |
+| `TEST_DATABASE_URL` | For tests | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list_test` | Separate DB used by the test suite |
 | `AUTH_SECRET` | Production only | random ephemeral | Secret for signing session JWTs |
 | `PORT` | No | `3001` | Port the API listens on |
 | `CLIENT_ORIGIN` | No | `http://localhost:3000` | Allowed CORS origin |

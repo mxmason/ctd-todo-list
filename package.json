@@ -1,11 +1,11 @@
 {
-	"name": "ctd-capstone",
+	"name": "ctd-todo-list",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
 	"workspaces": [
-		"server",
 		"client",
+		"server",
 		"shared"
 	],
 	"scripts": {
