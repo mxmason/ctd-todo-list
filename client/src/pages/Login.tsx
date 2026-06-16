@@ -38,6 +38,7 @@ export function Login() {
 				/>
 			</label>
 			<button type="submit">Log in</button>
+			<a href="/api/auth/google">Sign in with Google</a>
 			<p>
 				No account? <Link to="/register">Register</Link>
 			</p>
