@@ -1,9 +1,9 @@
 import js from "@eslint/js";
+import eslintReact from "@eslint-react/eslint-plugin";
 import { defineConfig } from "eslint/config";
 import prettier from "eslint-config-prettier";
 import importX from "eslint-plugin-import-x";
-import react from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
+import perfectionist from "eslint-plugin-perfectionist";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import { configs as tsConfigs } from "typescript-eslint";
@@ -42,21 +42,28 @@ export default defineConfig(
 	},
 	{
 		files: ["client/**/*.{ts,tsx}"],
+		extends: [eslintReact.configs["recommended-typescript"]],
 		languageOptions: {
 			globals: globals.browser,
 			parserOptions: { tsconfigRootDir: dirname + "/client" },
 		},
 		plugins: {
-			"react-hooks": reactHooks,
 			"react-refresh": reactRefresh,
-			react,
+			perfectionist,
 		},
 		rules: {
-			...reactHooks.configs.recommended.rules,
 			"react-refresh/only-export-components": "warn",
-			"react/jsx-sort-props": [
+			"@eslint-react/web-api-no-leaked-fetch": "off",
+			"perfectionist/sort-jsx-props": [
 				"error",
-				{ reservedFirst: true, callbacksLast: true },
+				{
+					type: "alphabetical",
+					groups: ["reserved", "prop", "callback"],
+					customGroups: [
+						{ groupName: "reserved", elementNamePattern: "^(key|ref)$" },
+						{ groupName: "callback", elementNamePattern: "^on.+" },
+					],
+				},
 			],
 		},
 	},
