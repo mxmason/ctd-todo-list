@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { requireAuth } from "#features/users/middleware.ts";
-import { AppError } from "#lib/app-error.ts";
+import { AppError, validate } from "#lib/app-error.ts";
 import { newTodoSchema, patchTodoSchema } from "#shared/schemas";
 
 import {
@@ -26,17 +26,17 @@ todoRoutes.get("/", async (req, res) => {
 todoRoutes.post("/", async (req, res) => {
 	if (Array.isArray(req.body)) {
 		const titles = req.body.map((item) => {
-			const { title } = newTodoSchema.parse(item);
+			const { title } = validate(newTodoSchema, item);
 			return title;
 		});
 		return res.status(201).json(await createManyTodos(req.user!.id, titles));
 	}
-	const { title } = newTodoSchema.parse(req.body);
+	const { title } = validate(newTodoSchema, req.body);
 	res.status(201).json(await createTodo(req.user!.id, title));
 });
 
 todoRoutes.patch("/:id", async (req, res) => {
-	const { completed } = patchTodoSchema.parse(req.body);
+	const { completed } = validate(patchTodoSchema, req.body);
 	const todo = await setTodoCompleted(req.user!.id, req.params.id, completed);
 	if (!todo) throw notFound();
 	res.json(todo);

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { validate } from "#lib/app-error.ts";
 import { credentialsSchema } from "#shared/schemas";
 
 import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
@@ -25,13 +26,13 @@ function timingDecoyHash(): Promise<string> {
 export const userRoutes = Router();
 
 userRoutes.post("/register", async (req, res) => {
-	const { username, password } = credentialsSchema.parse(req.body);
+	const { username, password } = validate(credentialsSchema, req.body);
 	const passwordHash = await hashPassword(password);
 	res.status(201).json(toPublicUser(await createUser(username, passwordHash)));
 });
 
 userRoutes.post("/login", async (req, res) => {
-	const { username, password } = credentialsSchema.parse(req.body);
+	const { username, password } = validate(credentialsSchema, req.body);
 	const user = await findUserByUsername(username);
 	const hash = user?.passwordHash ?? (await timingDecoyHash());
 	const ok = await verifyPassword(password, hash);
