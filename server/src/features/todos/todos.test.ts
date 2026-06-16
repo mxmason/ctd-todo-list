@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 
-import { seedUserSession, useTestDb } from "#/test-db.ts";
-import { api } from "#test-helpers.ts";
+import { seedUserSession, useTestDb } from "#test/db.ts";
+import { api } from "#test/helpers.ts";
 
 describe("todos", () => {
 	useTestDb();

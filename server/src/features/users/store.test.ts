@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { describe, expect, test } from "vitest";
 
 import { isAppError } from "#lib/app-error.ts";
-import { useTestDb } from "#test-db.ts";
+import { useTestDb } from "#test/db.ts";
 
 import { createUser, findUserById, findUserByUsername } from "./store.ts";
 

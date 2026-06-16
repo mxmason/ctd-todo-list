@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 
-import { agent as makeAgent, api } from "#test-helpers.ts";
+import { agent as makeAgent, api } from "#test/helpers.ts";
 
-import { useTestDb } from "../../test-db.ts";
+import { useTestDb } from "#test/db.ts";
 
 // useTestDb truncates between tests, but a unique username per call keeps tests
 // that register more than once self-contained.
