@@ -13,7 +13,6 @@ if (process.env.NODE_ENV !== "test") {
 	app.use(requestLogger);
 }
 
-app.disable("x-powered-by");
 app.use(helmet);
 
 // Restrict CORS to the known client origin. A wildcard origin is incompatible
