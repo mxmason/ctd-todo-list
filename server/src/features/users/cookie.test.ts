@@ -2,7 +2,9 @@ import type { Request } from "express";
 import { afterEach, describe, expect, test } from "vitest";
 
 import {
+	buildIndicatorCookie,
 	buildSessionCookie,
+	clearIndicatorCookie,
 	clearSessionCookie,
 	readSessionCookie,
 } from "./cookie.ts";
@@ -10,27 +12,35 @@ import {
 const req = (cookie?: string) =>
 	({ headers: { cookie } }) as unknown as Request;
 
-describe("buildSessionCookie", () => {
-	afterEach(() => {
-		process.env.NODE_ENV = "test";
-	});
-
-	test("contains required attributes and starts with session=", () => {
-		const cookie = buildSessionCookie("mytoken");
-		expect(cookie).toMatch(/^session=/);
-		expect(cookie).toContain("HttpOnly");
+function assertCommonAttrs(getCookie: () => string) {
+	test("has SameSite=Strict, Path=/, and Max-Age=3600", () => {
+		const cookie = getCookie();
 		expect(cookie).toContain("SameSite=Strict");
 		expect(cookie).toContain("Path=/");
 		expect(cookie).toContain("Max-Age=3600");
 	});
 
-	test("does NOT contain Secure when NODE_ENV is not production", () => {
-		expect(buildSessionCookie("mytoken")).not.toContain("Secure");
+	test("omits Secure outside production", () => {
+		expect(getCookie()).not.toContain("Secure");
 	});
 
-	test("contains Secure when NODE_ENV is production", () => {
+	test("adds Secure in production", () => {
 		process.env.NODE_ENV = "production";
-		expect(buildSessionCookie("mytoken")).toContain("Secure");
+		expect(getCookie()).toContain("Secure");
+	});
+}
+
+afterEach(() => {
+	process.env.NODE_ENV = "test";
+});
+
+describe("buildSessionCookie", () => {
+	assertCommonAttrs(() => buildSessionCookie("mytoken"));
+
+	test("starts with session=, has HttpOnly", () => {
+		const cookie = buildSessionCookie("mytoken");
+		expect(cookie).toMatch(/^session=/);
+		expect(cookie).toContain("HttpOnly");
 	});
 });
 
@@ -39,6 +49,25 @@ describe("clearSessionCookie", () => {
 		const cookie = clearSessionCookie();
 		expect(cookie).toMatch(/^session=/);
 		expect(cookie).toContain("Max-Age=0");
+	});
+});
+
+describe("buildIndicatorCookie", () => {
+	assertCommonAttrs(() => buildIndicatorCookie());
+
+	test("starts with logged_in=, has no HttpOnly", () => {
+		const cookie = buildIndicatorCookie();
+		expect(cookie).toMatch(/^logged_in=/);
+		expect(cookie).not.toContain("HttpOnly");
+	});
+});
+
+describe("clearIndicatorCookie", () => {
+	test("targets logged_in with Max-Age=0 and no HttpOnly", () => {
+		const cookie = clearIndicatorCookie();
+		expect(cookie).toMatch(/^logged_in=/);
+		expect(cookie).toContain("Max-Age=0");
+		expect(cookie).not.toContain("HttpOnly");
 	});
 });
 

@@ -5,7 +5,12 @@ import { validate } from "#lib/app-error.ts";
 import { requireAuth } from "#middleware/auth.ts";
 import { credentialsSchema, type User } from "#shared/schemas";
 
-import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
+import {
+	buildIndicatorCookie,
+	buildSessionCookie,
+	clearIndicatorCookie,
+	clearSessionCookie,
+} from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";
 import { authError } from "./errors.ts";
 import { createUser, findUserById, findUserByUsername } from "./store.ts";
@@ -36,12 +41,15 @@ userRoutes.post("/login", async (req, res) => {
 	const ok = await verifyPassword(password, hash);
 	// Same error for unknown user and wrong password — no enumeration.
 	if (!user || !ok) throw authError("invalid username or password");
-	res.setHeader("Set-Cookie", buildSessionCookie(await signToken(user.id)));
+	res.setHeader("Set-Cookie", [
+		buildSessionCookie(await signToken(user.id)),
+		buildIndicatorCookie(),
+	]);
 	res.json(toPublicUser(user));
 });
 
 userRoutes.post("/logout", (_req, res) => {
-	res.setHeader("Set-Cookie", clearSessionCookie());
+	res.setHeader("Set-Cookie", [clearSessionCookie(), clearIndicatorCookie()]);
 	res.status(204).end();
 });
 

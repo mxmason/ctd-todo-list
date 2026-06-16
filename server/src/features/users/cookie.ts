@@ -3,6 +3,7 @@ import type { Request } from "express";
 import { SESSION_TTL_SECONDS } from "./crypto.ts";
 
 const COOKIE_NAME = "session";
+const INDICATOR_COOKIE_NAME = "logged_in";
 
 export function readSessionCookie(req: Request): string | null {
 	const header = req.headers.cookie;
@@ -19,18 +20,31 @@ export function readSessionCookie(req: Request): string | null {
 }
 
 export function buildSessionCookie(token: string): string {
-	return serialize(encodeURIComponent(token), SESSION_TTL_SECONDS);
+	return serialize(COOKIE_NAME, encodeURIComponent(token), SESSION_TTL_SECONDS);
 }
 
 export function clearSessionCookie(): string {
-	return serialize("", 0);
+	return serialize(COOKIE_NAME, "", 0);
 }
 
-function serialize(value: string, maxAge: number): string {
+export function buildIndicatorCookie(): string {
+	return serialize(INDICATOR_COOKIE_NAME, "1", SESSION_TTL_SECONDS, false);
+}
+
+export function clearIndicatorCookie(): string {
+	return serialize(INDICATOR_COOKIE_NAME, "", 0, false);
+}
+
+function serialize(
+	name: string,
+	value: string,
+	maxAge: number,
+	httpOnly = true,
+): string {
 	const attrs = [
-		`${COOKIE_NAME}=${value}`,
-		"HttpOnly", // unreadable by JS — XSS can't steal it
-		"SameSite=Strict", // CSRF protection without a token
+		`${name}=${value}`,
+		...(httpOnly ? ["HttpOnly"] : []),
+		"SameSite=Strict",
 		"Path=/",
 		`Max-Age=${maxAge}`,
 	];

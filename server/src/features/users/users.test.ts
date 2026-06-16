@@ -86,8 +86,13 @@ describe("users", () => {
 		await agent.post("/api/users/register").send(user).expect(201);
 
 		const login = await agent.post("/api/users/login").send(user).expect(200);
+		expect(login.headers["set-cookie"]).toHaveLength(2);
 		expect(login.headers["set-cookie"][0]).toMatch(/HttpOnly/);
 		expect(login.headers["set-cookie"][0]).toMatch(/SameSite=Strict/);
+		expect(login.headers["set-cookie"][1]).toMatch(/^logged_in=1/);
+		expect(login.headers["set-cookie"][1]).not.toMatch(/HttpOnly/);
+		expect(login.headers["set-cookie"][1]).toMatch(/SameSite=Strict/);
+		expect(login.headers["set-cookie"][1]).toMatch(/Max-Age=3600/);
 
 		const todos = await agent.get("/api/todos").expect(200);
 		expect(Array.isArray(todos.body)).toBe(true);
@@ -97,6 +102,23 @@ describe("users", () => {
 
 		await agent.post("/api/users/logout").expect(204);
 		await agent.get("/api/todos").expect(401);
+	});
+
+	test("logout clears both session and indicator cookies", async () => {
+		const user = freshUser();
+		const agent = makeAgent();
+		await agent.post("/api/users/register").send(user).expect(201);
+		await agent.post("/api/users/login").send(user).expect(200);
+
+		const logout = await agent.post("/api/users/logout").expect(204);
+		const cookies = logout.headers["set-cookie"] as unknown as string[];
+		expect(cookies).toHaveLength(2);
+
+		const sessionCookie = cookies.find((c) => c.startsWith("session="));
+		const indicatorCookie = cookies.find((c) => c.startsWith("logged_in="));
+		expect(sessionCookie).toMatch(/Max-Age=0/);
+		expect(indicatorCookie).toMatch(/Max-Age=0/);
+		expect(indicatorCookie).not.toMatch(/HttpOnly/);
 	});
 
 	test("a tampered token is rejected", async () => {

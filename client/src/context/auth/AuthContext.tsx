@@ -6,13 +6,27 @@ import { type Credentials, type User } from "#shared/schemas";
 
 import { AuthContext } from "./context.ts";
 
+function hasSessionIndicator(): boolean {
+	return document.cookie
+		.split(";")
+		.some((c) => c.trim().startsWith("logged_in="));
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(hasSessionIndicator);
 
 	useEffect(() => {
+		if (!hasSessionIndicator()) return;
+
 		usersApi.me().then((result) => {
-			if (result.error === null) setUser(result.data);
+			if (result.error === null) {
+				setUser(result.data);
+			} else {
+				// Stale indicator (session expired/secret rotated) — clear it so the
+				// next page load doesn't make a wasted /me round-trip.
+				document.cookie = "logged_in=; Max-Age=0; Path=/; SameSite=Strict";
+			}
 			setIsLoading(false);
 		});
 	}, []);
