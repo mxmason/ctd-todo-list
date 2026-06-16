@@ -27,7 +27,7 @@ export default defineConfig(
 			"@typescript-eslint/no-unused-vars": "off",
 			"@typescript-eslint/consistent-type-imports": [
 				"error",
-				{ prefer: "type-imports", fixStyle: "inline-type-imports" },
+				{ prefer: "type-imports", fixStyle: "separate-type-imports" },
 			],
 			"import-x/order": [
 				"error",
@@ -64,10 +64,11 @@ export default defineConfig(
 				"error",
 				{
 					type: "alphabetical",
-					groups: ["reserved", "prop", "callback"],
+					groups: ["reserved", "prop", "callback", "boolean"],
 					customGroups: [
 						{ groupName: "reserved", elementNamePattern: "^(key|ref)$" },
 						{ groupName: "callback", elementNamePattern: "^on.+" },
+						{ groupName: "boolean", modifiers: ["shorthand"] },
 					],
 				},
 			],
