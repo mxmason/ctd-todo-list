@@ -13,13 +13,14 @@ if (process.env.NODE_ENV !== "test") {
 	app.use(requestLogger);
 }
 
-app.use(helmet);
-
-// Restrict CORS to the known client origin. A wildcard origin is incompatible
-// with the credentialed (cookie-based) auth requests this API serves.
-const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
 app.use(
-	cors({ origin: clientOrigin, credentials: true }),
+	helmet,
+	// Restrict CORS to the known client origin. A wildcard origin is incompatible
+	// with the credentialed (cookie-based) auth requests this API serves.
+	cors({
+		origin: process.env.CLIENT_ORIGIN ?? "http://localhost:5173",
+		credentials: true,
+	}),
 	express.json({ limit: "10kb" }),
 );
 
