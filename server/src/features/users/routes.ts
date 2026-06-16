@@ -1,8 +1,9 @@
 import { Router } from "express";
 
+import type { User as PrismaUser } from "#generated/prisma/client.ts";
 import { validate } from "#lib/app-error.ts";
 import { requireAuth } from "#middleware/auth.ts";
-import { credentialsSchema } from "#shared/schemas";
+import { credentialsSchema, type User } from "#shared/schemas";
 
 import { buildSessionCookie, clearSessionCookie } from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";
@@ -10,10 +11,7 @@ import { authError } from "./errors.ts";
 import { createUser, findUserById, findUserByUsername } from "./store.ts";
 
 // Public projection of a user — keeps passwordHash from ever reaching a client.
-const toPublicUser = ({ id, username }: { id: string; username: string }) => ({
-	id: id,
-	username: username,
-});
+const toPublicUser = ({ id, username }: PrismaUser): User => ({ id, username });
 
 // Memoized dummy hash so login spends the same time whether or not the user
 // exists — avoids leaking which usernames are registered via response timing.
