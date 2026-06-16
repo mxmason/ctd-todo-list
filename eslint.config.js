@@ -3,6 +3,7 @@ import eslintReact from "@eslint-react/eslint-plugin";
 import { defineConfig } from "eslint/config";
 import prettier from "eslint-config-prettier";
 import importX from "eslint-plugin-import-x";
+import { createNodeResolver } from "eslint-plugin-import-x/node-resolver";
 import perfectionist from "eslint-plugin-perfectionist";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
@@ -17,7 +18,7 @@ export default defineConfig(
 	{
 		plugins: { "import-x": importX },
 		settings: {
-			"import-x/resolver": { typescript: true, node: true },
+			"import-x/resolver-next": [createNodeResolver({ tsconfig: "auto" })],
 		},
 		rules: {
 			// Delegated to TypeScript's noUnusedLocals/noUnusedParameters, which counts
