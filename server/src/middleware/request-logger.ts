@@ -1,19 +1,13 @@
 import type { RequestHandler } from "express";
 
-// Replaces morgan("dev"): one colored line per request, logged once the
-// response finishes, in morgan's dev format —
-// `:method :url :status :response-time ms - :content-length`.
-// Same output, minus the dependency.
-
-// Status-code coloring, matching morgan's dev preset.
-function statusColor(status: number): number {
-	if (status >= 500) return 31; // red
-	if (status >= 400) return 33; // yellow
-	if (status >= 300) return 36; // cyan
-	if (status >= 200) return 32; // green
-	return 0; // no color
-}
-
+/**
+ * Log incoming requests and their responses in a format similar to the
+ * Apache combined log format, but with response time and content length instead
+ * of referrer and user agent (since those aren't relevant for an API server).
+ *
+ * Similar to {@link https://github.com/expressjs/morgan | morgan}'s
+ * `'dev'` format.
+ */
 export const requestLogger: RequestHandler = (req, res, next) => {
 	const start = process.hrtime.bigint();
 
@@ -31,3 +25,12 @@ export const requestLogger: RequestHandler = (req, res, next) => {
 
 	next();
 };
+
+// Status-code coloring, matching morgan's dev preset.
+function statusColor(status: number): number {
+	if (status >= 500) return 31; // red
+	if (status >= 400) return 33; // yellow
+	if (status >= 300) return 36; // cyan
+	if (status >= 200) return 32; // green
+	return 0; // no color
+}
