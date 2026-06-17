@@ -10,9 +10,9 @@
 		"#shared/*": "shared/*"
 	},
 	"scripts": {
-		"build": "db:deploy",
-		"dev": "node --env-file=.env --watch src/index.ts",
-		"start": "node --env-file=.env src/index.ts",
+		"build": "npm run db:generate && npm run db:deploy",
+		"dev": "node --env-file-if-exists=.env --watch src/index.ts",
+		"start": "node --env-file-if-exists=.env src/index.ts",
 		"test": "vitest run --passWithNoTests",
 		"typecheck": "tsgo -b",
 		"lint": "eslint --cache . --fix",
@@ -20,8 +20,7 @@
 		"db:migrate": "prisma migrate dev",
 		"db:deploy": "prisma migrate deploy",
 		"db:studio": "prisma studio",
-		"db:flatten": "rm -rf prisma/migrations && prisma migrate reset --force && prisma migrate dev --name init",
-		"postinstall": "prisma generate"
+		"db:flatten": "rm -rf prisma/migrations && prisma migrate reset --force && prisma migrate dev --name init"
 	},
 	"engines": {
 		"node": ">=20.19"
@@ -33,6 +32,7 @@
 		"express": "5.2.1",
 		"google-auth-library": "10.7.0",
 		"jose": "6.2.3",
+		"prisma": "7.8.0",
 		"shared": "*",
 		"zod": "4.4.3"
 	},
@@ -41,7 +41,6 @@
 		"@types/express": "5.0.6",
 		"@types/node": "24.13.2",
 		"@types/supertest": "7.2.0",
-		"prisma": "7.8.0",
 		"supertest": "7.2.2",
 		"typescript": "6.0.3",
 		"vitest": "4.1.9"

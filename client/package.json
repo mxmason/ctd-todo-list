@@ -8,9 +8,8 @@
 		"#*": "./src/*"
 	},
 	"scripts": {
-		"start": "vite",
 		"dev": "vite",
-		"build": "tsgo -b && vite build",
+		"build": "vite build",
 		"preview": "vite preview",
 		"typecheck": "tsgo -b",
 		"lint": "eslint --cache . --fix"
