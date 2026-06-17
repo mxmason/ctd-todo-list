@@ -48,8 +48,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		return login(creds);
 	};
 
+	const refreshUser = async () => {
+		const result = await usersApi.me();
+		if (result.error === null) setUser(result.data);
+	};
+
 	return (
-		<AuthContext value={{ user, isLoading, login, logout, register }}>
+		<AuthContext
+			value={{ user, isLoading, login, logout, register, refreshUser }}
+		>
 			{children}
 		</AuthContext>
 	);

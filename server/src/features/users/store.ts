@@ -9,9 +9,28 @@ export const findUserByUsername = (username: string) =>
 export const findUserById = (id: string) =>
 	prisma.user.findUnique({ where: { id } });
 
-export async function createUser(username: string, passwordHash: string) {
+export const findUserByEmail = (email: string) =>
+	prisma.user.findUnique({ where: { email } });
+
+export const findUserByGoogleId = (googleId: string) =>
+	prisma.user.findUnique({ where: { googleId } });
+
+export const linkGoogleAccount = (
+	userId: string,
+	googleId: string,
+	email: string,
+) => prisma.user.update({ where: { id: userId }, data: { googleId, email } });
+
+export async function createUser(
+	username: string,
+	passwordHash: string | null,
+	googleId?: string,
+	email?: string,
+) {
 	try {
-		return await prisma.user.create({ data: { username, passwordHash } });
+		return await prisma.user.create({
+			data: { username, passwordHash, googleId, email },
+		});
 	} catch (err) {
 		// P2002 is Prisma's unique-constraint violation
 		if (

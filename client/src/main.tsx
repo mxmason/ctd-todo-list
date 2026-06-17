@@ -2,7 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 
+import { GoogleAuthPopup } from "./components/GoogleAuthButton.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
+import { PublicRoute } from "./components/PublicRoute.tsx";
 import { AuthProvider } from "./context/auth/index.ts";
 import { Layout } from "./layouts/Layout.tsx";
 import { Home } from "./pages/Home.tsx";
@@ -15,8 +17,11 @@ createRoot(document.getElementById("root")!).render(
 			<AuthProvider>
 				<Routes>
 					<Route element={<Layout />}>
-						<Route element={<Login />} path="/login" />
-						<Route element={<Register />} path="/register" />
+						<Route element={<PublicRoute />}>
+							<Route element={<Login />} path="/login" />
+							<Route element={<Register />} path="/register" />
+						</Route>
+						<Route element={<GoogleAuthPopup />} path="/oauth/callback" />
 						<Route element={<ProtectedRoute />}>
 							<Route element={<Home />} index />
 						</Route>

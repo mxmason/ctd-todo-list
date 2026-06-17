@@ -1,15 +1,14 @@
 import * as React from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-import { useAuth } from "../context/auth/index.ts";
+import { GoogleAuthButton } from "#components/GoogleAuthButton.tsx";
+import { useAuth } from "#context/auth/index.ts";
 
 export function Login() {
-	const { user, login } = useAuth();
+	const { login } = useAuth();
 	const navigate = useNavigate();
 	const [username, setUsername] = React.useState("");
 	const [password, setPassword] = React.useState("");
-
-	if (user) return <Navigate to="/" replace />;
 
 	const handleSubmit = async (evt: React.SubmitEvent) => {
 		evt.preventDefault();
@@ -38,6 +37,7 @@ export function Login() {
 				/>
 			</label>
 			<button type="submit">Log in</button>
+			<GoogleAuthButton />
 			<p>
 				No account? <Link to="/register">Register</Link>
 			</p>
