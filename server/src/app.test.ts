@@ -13,7 +13,7 @@ describe("security headers", () => {
 	test("sets a strict CSP and hardening headers", async () => {
 		const res = await api().get("/api/todos");
 		expect(res.headers["content-security-policy"]).toBe(
-			"default-src 'none'; frame-ancestors 'none'",
+			"default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
 		);
 		expect(res.headers["x-content-type-options"]).toBe("nosniff");
 		expect(res.headers["referrer-policy"]).toBe("no-referrer");

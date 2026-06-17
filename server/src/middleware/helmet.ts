@@ -12,7 +12,17 @@ import type { RequestHandler } from "express";
 export const helmet: RequestHandler = (_req, res, next) => {
 	res.removeHeader("X-Powered-By");
 	res.set({
-		"Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+		"Content-Security-Policy": [
+			"default-src 'none'",
+			"script-src 'self'",
+			"style-src 'self' 'unsafe-inline'",
+			"img-src 'self' data:",
+			"font-src 'self'",
+			"connect-src 'self'",
+			"frame-ancestors 'none'",
+			"base-uri 'self'",
+			"form-action 'self'",
+		].join("; "),
 		"Cross-Origin-Resource-Policy": "same-origin",
 		"Referrer-Policy": "no-referrer",
 		"Strict-Transport-Security": "max-age=31536000; includeSubDomains",
