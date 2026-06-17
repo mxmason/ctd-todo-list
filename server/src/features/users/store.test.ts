@@ -5,23 +5,23 @@ import { describe, expect, test } from "vitest";
 import { isAppError } from "#lib/app-error.ts";
 import { useTestDb } from "#test/db.ts";
 
-import { createUser, findUserById, findUserByUsername } from "./store.ts";
+import { createLocalUser, findUserById, findUserByUsername } from "./store.ts";
 
 describe("users/store", () => {
 	useTestDb();
 
 	test("createUser returns an object with id, username, and passwordHash", async () => {
-		const user = await createUser("alice", "hash:abc");
+		const user = await createLocalUser("alice", "hash:abc");
 		expect(user.id).toEqual(expect.any(String));
 		expect(user.username).toBe("alice");
 		expect(user.passwordHash).toBe("hash:abc");
 	});
 
 	test("createUser throws an AppError with status 409 and code 'conflict' on duplicate username", async () => {
-		await createUser("bob", "hash:1");
+		await createLocalUser("bob", "hash:1");
 		expect.assertions(3);
 		try {
-			await createUser("bob", "hash:2");
+			await createLocalUser("bob", "hash:2");
 		} catch (err) {
 			expect(isAppError(err)).toBe(true);
 			if (isAppError(err)) {
@@ -32,7 +32,7 @@ describe("users/store", () => {
 	});
 
 	test("findUserByUsername returns the user when it exists", async () => {
-		await createUser("carol", "hash:xyz");
+		await createLocalUser("carol", "hash:xyz");
 		const found = await findUserByUsername("carol");
 		expect(found).not.toBeNull();
 		expect(found?.username).toBe("carol");
@@ -43,7 +43,7 @@ describe("users/store", () => {
 	});
 
 	test("findUserById returns the user when it exists", async () => {
-		const created = await createUser("dave", "hash:qrs");
+		const created = await createLocalUser("dave", "hash:qrs");
 		const found = await findUserById(created.id);
 		expect(found).not.toBeNull();
 		expect(found?.id).toBe(created.id);

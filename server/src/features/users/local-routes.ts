@@ -13,7 +13,7 @@ import {
 } from "./cookie.ts";
 import { hashPassword, signToken, verifyPassword } from "./crypto.ts";
 import { authError } from "./errors.ts";
-import { createUser, findUserById, findUserByUsername } from "./store.ts";
+import { createLocalUser, findUserById, findUserByUsername } from "./store.ts";
 
 // Public projection of a user — keeps passwordHash from ever reaching a client.
 const toPublicUser = ({ id, username }: PrismaUser): User => ({ id, username });
@@ -31,7 +31,9 @@ export const userRoutes = Router();
 userRoutes.post("/register", async (req, res) => {
 	const { username, password } = validate(credentialsSchema, req.body);
 	const passwordHash = await hashPassword(password);
-	res.status(201).json(toPublicUser(await createUser(username, passwordHash)));
+	res
+		.status(201)
+		.json(toPublicUser(await createLocalUser(username, passwordHash)));
 });
 
 userRoutes.post("/login", async (req, res) => {

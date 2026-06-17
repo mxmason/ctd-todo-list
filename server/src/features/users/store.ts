@@ -21,24 +21,27 @@ export const linkGoogleAccount = (
 	email: string,
 ) => prisma.user.update({ where: { id: userId }, data: { googleId, email } });
 
-export async function createUser(
-	username: string,
-	passwordHash: string | null,
-	googleId?: string,
-	email?: string,
-) {
+async function createUser(data: {
+	username: string;
+	passwordHash: string | null;
+	googleId?: string;
+	email?: string;
+}) {
 	try {
-		return await prisma.user.create({
-			data: { username, passwordHash, googleId, email },
-		});
+		return await prisma.user.create({ data });
 	} catch (err) {
-		// P2002 is Prisma's unique-constraint violation
 		if (
 			err instanceof Prisma.PrismaClientKnownRequestError &&
 			err.code === "P2002"
 		) {
-			throw duplicateUserError(username);
+			throw duplicateUserError(data.username);
 		}
 		throw err;
 	}
 }
+
+export const createLocalUser = (username: string, passwordHash: string) =>
+	createUser({ username, passwordHash });
+
+export const createGoogleUser = (googleId: string, email: string) =>
+	createUser({ username: email, googleId, email, passwordHash: null });

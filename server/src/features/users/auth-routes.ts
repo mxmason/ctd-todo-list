@@ -6,7 +6,7 @@ import { buildIndicatorCookie, buildSessionCookie } from "./cookie.ts";
 import { signToken } from "./crypto.ts";
 import { getGoogleAuthUrl, getGoogleProfile } from "./google.ts";
 import {
-	createUser,
+	createGoogleUser,
 	findUserByEmail,
 	findUserByGoogleId,
 	linkGoogleAccount,
@@ -36,7 +36,7 @@ authRoutes.get("/google/callback", async (req, res) => {
 		(await findUserByGoogleId(googleId)) ?? (await findUserByEmail(email));
 
 	if (!user) {
-		user = await createUser(email, null, googleId, email);
+		user = await createGoogleUser(googleId, email);
 	} else if (!user.googleId) {
 		user = await linkGoogleAccount(user.id, googleId, email);
 	}

@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { todoRoutes } from "#features/todos/routes.ts";
 import { authRoutes } from "#features/users/auth-routes.ts";
-import { userRoutes } from "#features/users/routes.ts";
+import { userRoutes } from "#features/users/local-routes.ts";
 
 export const router = Router();
 
