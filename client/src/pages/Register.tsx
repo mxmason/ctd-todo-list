@@ -1,15 +1,13 @@
 import * as React from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
-import { useAuth } from "../context/auth/index.ts";
+import { useAuth } from "#context/auth/index.ts";
 
 export function Register() {
-	const { user, register } = useAuth();
+	const { register } = useAuth();
 	const navigate = useNavigate();
 	const [username, setUsername] = React.useState("");
 	const [password, setPassword] = React.useState("");
-
-	if (user) return <Navigate to="/" replace />;
 
 	const handleSubmit = async (evt: React.SubmitEvent) => {
 		evt.preventDefault();
