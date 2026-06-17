@@ -8,6 +8,7 @@
 		"#*": "./src/*"
 	},
 	"scripts": {
+		"start": "vite",
 		"dev": "vite",
 		"build": "tsgo -b && vite build",
 		"preview": "vite preview",

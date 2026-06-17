@@ -10,6 +10,7 @@
 		"#shared/*": "shared/*"
 	},
 	"scripts": {
+		"build": "db:deploy",
 		"dev": "node --env-file=.env --watch src/index.ts",
 		"start": "node --env-file=.env src/index.ts",
 		"test": "vitest run --passWithNoTests",
