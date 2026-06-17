@@ -1,5 +1,4 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import { join, resolve } from "node:path";
 
 import cors from "cors";
 import express from "express";
@@ -30,13 +29,10 @@ app.use(
 app.use("/api", router);
 
 if (process.env.NODE_ENV === "production") {
-	const clientDist = path.resolve(
-		path.dirname(fileURLToPath(import.meta.url)),
-		"../../client/dist",
-	);
+	const clientDist = resolve(import.meta.dirname, "../../client/dist");
 	app.use(express.static(clientDist));
 	app.get("*path", (_req, res) => {
-		res.sendFile(path.join(clientDist, "index.html"));
+		res.sendFile(join(clientDist, "index.html"));
 	});
 }
 
