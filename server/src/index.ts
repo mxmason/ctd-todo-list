@@ -2,7 +2,7 @@ import { app } from "#app.ts";
 import { prisma } from "#lib/prisma.ts";
 
 const port = Number(process.env.PORT ?? 3001);
-const server = app.listen(port, () => {
+const server = app.listen(port, "0.0.0.0", () => {
 	console.log(`server listening on http://localhost:${port}`);
 });
 
