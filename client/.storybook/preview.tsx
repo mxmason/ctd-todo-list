@@ -1,10 +1,10 @@
-import type { Preview } from "@storybook/react-vite";
+import { definePreview } from "@storybook/react-vite";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { BrowserRouter } from "react-router";
 
 import { AuthProvider } from "../src/context/auth/index.ts";
 
-import { handlers } from "./msw-handlers.ts";
+import { handlers } from "../src/test/msw-handlers.ts";
 
 // `logged_in` is the only browser-state key the app reads at render
 // (AuthProvider checks document.cookie). Seed it so the auth flow runs
@@ -13,7 +13,8 @@ document.cookie = "logged_in=1; Path=/; SameSite=Strict";
 
 initialize({ onUnhandledRequest: "bypass" });
 
-const preview: Preview = {
+export default definePreview({
+	addons: [],
 	decorators: [
 		(Story) => (
 			<BrowserRouter>
@@ -33,6 +34,4 @@ const preview: Preview = {
 		},
 		msw: { handlers },
 	},
-};
-
-export default preview;
+});

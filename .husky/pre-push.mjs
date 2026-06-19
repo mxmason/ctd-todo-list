@@ -23,9 +23,7 @@ async function changedFiles(base, head) {
 		? await git(["diff", "--name-only", `${base}..${head}`])
 		: await git(["ls-tree", "-r", "--name-only", head]);
 	if (!out) return [];
-	return out
-		.split("\n")
-		.filter((f) => f.startsWith("server/") && f.endsWith(".ts"));
+	return out.split("\n").filter(Boolean);
 }
 
 async function filesForRef({ localSha, remoteSha }) {
@@ -46,23 +44,42 @@ const refs = readFileSync(0, "utf8")
 	});
 
 const lists = await Promise.all(refs.map(filesForRef));
-const changed = new Set(lists.flat());
+const allChanged = new Set(lists.flat());
 
-if (changed.size === 0) process.exit(0);
+const serverFiles = [...allChanged].filter(
+	(f) => f.startsWith("server/") && f.endsWith(".ts"),
+);
+const clientFiles = [...allChanged].filter(
+	(f) => f.startsWith("client/") && (f.endsWith(".ts") || f.endsWith(".tsx")),
+);
 
-const relFiles = [...changed].map((f) => f.slice("server/".length));
-console.log("Running related tests for:");
-for (const f of changed) console.log(`  ${f}`);
+if (serverFiles.length === 0 && clientFiles.length === 0) process.exit(0);
 
 const require = createRequire(import.meta.url);
-const vitestBin = join(
-	dirname(require.resolve("vitest/package.json")),
-	"vitest.mjs",
-);
 
-const child = spawn(
-	process.execPath,
-	[vitestBin, "related", "--run", ...relFiles],
-	{ cwd: "server", stdio: "inherit" },
-);
-child.on("exit", (code) => process.exit(code ?? 1));
+function runRelatedTests(workspace, files) {
+	const relFiles = files.map((f) => f.slice(`${workspace}/`.length));
+	console.log(`Running related ${workspace} tests for:`);
+	for (const f of files) console.log(`  ${f}`);
+
+	const vitestBin = join(
+		dirname(require.resolve("vitest/package.json")),
+		"vitest.mjs",
+	);
+
+	return new Promise((resolve) => {
+		const child = spawn(
+			process.execPath,
+			[vitestBin, "related", "--run", ...relFiles],
+			{ cwd: workspace, stdio: "inherit" },
+		);
+		child.on("exit", (code) => resolve(code ?? 1));
+	});
+}
+
+const jobs = [];
+if (serverFiles.length > 0) jobs.push(runRelatedTests("server", serverFiles));
+if (clientFiles.length > 0) jobs.push(runRelatedTests("client", clientFiles));
+
+const codes = await Promise.all(jobs);
+process.exit(codes.some((c) => c !== 0) ? 1 : 0);
