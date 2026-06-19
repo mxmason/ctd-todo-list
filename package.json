@@ -37,7 +37,7 @@
 		"eslint-plugin-import-x": "4.16.2",
 		"globals": "17.6.0",
 		"husky": "9.1.7",
-		"nano-staged": "latest",
+		"nano-staged": "1.0.2",
 		"prettier": "3.8.4",
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.61.1"
