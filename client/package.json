@@ -12,7 +12,9 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"typecheck": "tsgo -b",
-		"lint": "eslint --cache . --fix"
+		"lint": "eslint --cache . --fix",
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
 	},
 	"dependencies": {
 		"@babel/core": "8.0.1",
@@ -28,13 +30,31 @@
 		"zod": "4.4.3"
 	},
 	"devDependencies": {
+		"@chromatic-com/storybook": "5.2.1",
 		"@eslint-react/eslint-plugin": "5.9.0",
+		"@storybook/addon-mcp": "0.6.0",
+		"@storybook/addon-vitest": "10.4.6",
+		"@storybook/react-vite": "10.4.6",
 		"@types/react": "19.2.17",
 		"@types/react-dom": "19.2.3",
+		"@vitest/browser-playwright": "4.1.9",
+		"@vitest/coverage-v8": "4.1.9",
 		"eslint-plugin-perfectionist": "5.9.1",
-		"eslint-plugin-react-refresh": "0.5.3"
+		"eslint-plugin-react-refresh": "0.5.3",
+		"eslint-plugin-storybook": "10.4.6",
+		"mockdate": "3.0.5",
+		"msw": "2.14.6",
+		"msw-storybook-addon": "2.0.7",
+		"playwright": "1.61.0",
+		"storybook": "10.4.6",
+		"vitest": "4.1.9"
 	},
 	"overrides": {
 		"@babel/core": "8.0.1"
+	},
+	"msw": {
+		"workerDirectory": [
+			"public"
+		]
 	}
 }
