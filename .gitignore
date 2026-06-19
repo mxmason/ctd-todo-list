@@ -11,3 +11,6 @@ server/src/generated/
 # Local environment files (keep .env.example committed)
 .env
 server/.env
+
+*storybook.log
+storybook-static

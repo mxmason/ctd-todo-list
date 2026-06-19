@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router";
 
-import { GoogleAuthButton } from "#components/GoogleAuthButton.tsx";
+import { GoogleAuthButton } from "#components/GoogleAuthButton/index.ts";
 import { useAuth } from "#context/auth/index.ts";
 
 export function Login() {

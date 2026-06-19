@@ -1,4 +1,4 @@
-import { AddTodoForm } from "#components/AddTodoForm.tsx";
+import { AddTodoForm } from "#components/AddTodoForm/index.ts";
 import { useTodos } from "#hooks/todos.ts";
 
 export function Home() {

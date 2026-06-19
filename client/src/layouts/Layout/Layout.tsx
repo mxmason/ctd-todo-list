@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate } from "react-router";
 
-import { useAuth } from "../context/auth/index.ts";
+import { useAuth } from "../../context/auth/index.ts";
 
 export const Layout = () => {
 	const { user, logout } = useAuth();
