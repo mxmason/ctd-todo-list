@@ -25,6 +25,7 @@
 		"lint": "concurrently --raw \"npm:lint:* --silent\"",
 		"lint:server": "npm run lint --workspace=server",
 		"lint:client": "npm run lint --workspace=client",
+		"storybook": "npm run storybook --workspace=client",
 		"prepare": "husky"
 	},
 	"devDependencies": {

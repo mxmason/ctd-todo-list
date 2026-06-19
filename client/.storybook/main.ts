@@ -1,8 +1,7 @@
-import { defineMain } from "@storybook/react-vite/node";
-
 import { dirname } from "path";
-
 import { fileURLToPath } from "url";
+
+import { defineMain } from "@storybook/react-vite/node";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -13,7 +12,10 @@ function getAbsolutePath(value: string) {
 }
 export default defineMain({
 	stories: ["../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
-	addons: [getAbsolutePath("@storybook/addon-mcp")],
+	addons: [
+		getAbsolutePath("@storybook/addon-mcp"),
+		getAbsolutePath("@storybook/addon-vitest"),
+	],
 	framework: getAbsolutePath("@storybook/react-vite"),
 	staticDirs: ["../public"],
 });
