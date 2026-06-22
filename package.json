@@ -39,7 +39,8 @@
 		"husky": "9.1.7",
 		"nano-staged": "1.0.2",
 		"prettier": "3.8.4",
-		"typescript": "6.0.3",
+		"typescript": "npm:@typescript/typescript6@6.0.1",
+		"typescript-7": "npm:typescript@rc",
 		"typescript-eslint": "8.61.1"
 	}
 }
