@@ -10,7 +10,7 @@
 		}
 	},
 	"scripts": {
-		"typecheck": "tsgo -b",
+		"typecheck": "tsc -b",
 		"lint": "eslint . --fix"
 	},
 	"dependencies": {
