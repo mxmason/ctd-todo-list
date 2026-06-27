@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import * as React from "react";
 import { BrowserRouter } from "react-router";
 import { render as vitestRender } from "vitest-browser-react";

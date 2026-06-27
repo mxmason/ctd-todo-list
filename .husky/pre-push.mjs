@@ -71,7 +71,10 @@ function runRelatedTests(workspace, files) {
 		const child = spawn(
 			process.execPath,
 			[vitestBin, "related", "--run", ...relFiles],
-			{ cwd: workspace, stdio: "inherit" },
+			{
+				cwd: workspace,
+				stdio: "inherit",
+			},
 		);
 		child.on("exit", (code) => resolve(code ?? 1));
 	});

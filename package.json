@@ -1,13 +1,13 @@
 {
 	"name": "ctd-todo-list",
-	"private": true,
 	"version": "0.0.1",
-	"type": "module",
+	"private": true,
 	"workspaces": [
 		"client",
 		"server",
 		"shared"
 	],
+	"type": "module",
 	"scripts": {
 		"start": "npm run start --workspace=server",
 		"dev": "concurrently \"npm:dev:*\"",
@@ -22,22 +22,20 @@
 		"typecheck": "concurrently --raw \"npm:typecheck:* --silent\"",
 		"typecheck:server": "npm run typecheck --workspace=server",
 		"typecheck:client": "npm run typecheck --workspace=client",
-		"lint": "concurrently --raw \"npm:lint:* --silent\"",
-		"lint:server": "npm run lint --workspace=server",
-		"lint:client": "npm run lint --workspace=client",
+		"lint": "oxlint --fix . && concurrently --raw \"npm:lint:eslint:* --silent\"",
+		"lint:eslint:server": "npm run lint --workspace=server",
+		"lint:eslint:client": "npm run lint --workspace=client",
 		"storybook": "npm run storybook --workspace=client",
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@eslint/js": "10.0.1",
+		"@types/node": "24.13.2",
 		"concurrently": "10.0.3",
 		"eslint": "10.5.0",
-		"eslint-config-prettier": "10.1.8",
-		"eslint-plugin-import-x": "4.16.2",
-		"globals": "17.6.0",
 		"husky": "9.1.7",
 		"nano-staged": "1.0.2",
-		"prettier": "3.8.4",
+		"oxfmt": "0.56.0",
+		"oxlint": "1.71.0",
 		"typescript": "6.0.3",
 		"typescript-eslint": "8.61.1"
 	}

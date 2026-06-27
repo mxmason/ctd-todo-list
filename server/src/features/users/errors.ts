@@ -1,5 +1,4 @@
 import { AppError } from "#lib/app-error.ts";
-import type { errorHandler } from "#middleware/error.ts";
 
 /**
  * Missing or invalid session. Rendered as 401 by {@link errorHandler}.
