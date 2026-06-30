@@ -2,7 +2,7 @@
 	"recommendations": [
 		"dbaeumer.vscode-eslint",
 		"editorconfig.editorconfig",
-		"esbenp.prettier-vscode",
-		"typescriptteam.native-preview"
+		"typescriptteam.native-preview",
+		"oxc.oxc-vscode"
 	]
 }
