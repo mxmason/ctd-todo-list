@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Link, useNavigate } from "react-router";
 
-import { GoogleAuthButton } from "#components/GoogleAuthButton/index.ts";
-import { useAuth } from "#context/auth/index.ts";
+import { GoogleAuthButton } from "#components/GoogleAuthButton/GoogleAuthButton.tsx";
+import { useAuth } from "#context/auth/useAuth.ts";
 
 export function Login() {
 	const { login } = useAuth();

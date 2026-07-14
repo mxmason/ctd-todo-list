@@ -3,7 +3,7 @@ import * as React from "react";
 import { BrowserRouter } from "react-router";
 import { render as vitestRender } from "vitest-browser-react";
 
-import { AuthProvider } from "#context/auth/index.ts";
+import { AuthProvider } from "#context/auth/AuthContext.tsx";
 
 export * from "vitest";
 export * from "vitest-browser-react";

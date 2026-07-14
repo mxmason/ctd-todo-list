@@ -2,13 +2,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router";
 
-import { GoogleAuthPopup } from "./components/GoogleAuthButton/index.ts";
+import { GoogleAuthPopup } from "./components/GoogleAuthButton/GoogleAuthButton.tsx";
 import { ProtectedRoute } from "./components/ProtectedRoute.tsx";
 import { PublicRoute } from "./components/PublicRoute.tsx";
-import { AuthProvider } from "./context/auth/index.ts";
-import { Layout } from "./layouts/Layout/index.ts";
-import { Home } from "./pages/Home/index.ts";
-import { Login } from "./pages/Login/index.ts";
+import { AuthProvider } from "./context/auth/AuthContext.tsx";
+import { Layout } from "./layouts/Layout/Layout.tsx";
+import { Home } from "./pages/Home/Home.tsx";
+import { Login } from "./pages/Login/Login.tsx";
 import { Register } from "./pages/Register.tsx";
 
 createRoot(document.getElementById("root")!).render(

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useNavigate } from "react-router";
 
-import { useAuth } from "#context/auth/index.ts";
+import { useAuth } from "#context/auth/useAuth.ts";
 
 export function GoogleAuthPopup() {
 	const navigate = useNavigate();

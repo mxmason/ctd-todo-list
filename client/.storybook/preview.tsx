@@ -2,7 +2,7 @@ import { definePreview } from "@storybook/react-vite";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { BrowserRouter } from "react-router";
 
-import { AuthProvider } from "#context/auth/index.ts";
+import { AuthProvider } from "#context/auth/AuthContext.tsx";
 import { handlers } from "#test/msw-handlers.ts";
 
 // `logged_in` is the only browser-state key the app reads at render
