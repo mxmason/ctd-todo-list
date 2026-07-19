@@ -1,25 +1,37 @@
 import cn from "clsx";
 import * as React from "react";
 
-import style from "./Button.module.css";
+import styles from "./Button.module.css";
+type ButtonStyles = typeof styles;
 
 export interface ButtonProps extends React.ComponentProps<"button"> {
 	variant?: "primary";
 }
 
-const CLASSNAME_BY_VARIANT = {
-	primary: style.primary,
-} satisfies Record<NonNullable<ButtonProps["variant"]>, string>;
+const CLASSNAME_BY_VARIANT: Record<
+	NonNullable<ButtonProps["variant"]>,
+	ButtonStyles[keyof ButtonStyles]
+> = {
+	primary: styles.primary,
+};
 
-export function Button({ children, className, variant, ...rest }: ButtonProps) {
-	const composedClassName = cn(
-		className,
-		style.root,
-		variant && CLASSNAME_BY_VARIANT[variant],
-	);
-
+export function Button({
+	children,
+	className,
+	tabIndex = 0,
+	variant,
+	...rest
+}: ButtonProps) {
 	return (
-		<button {...rest} className={composedClassName}>
+		<button
+			{...rest}
+			className={cn(
+				styles.root,
+				variant && CLASSNAME_BY_VARIANT[variant],
+				className,
+			)}
+			tabIndex={tabIndex}
+		>
 			{children}
 		</button>
 	);
