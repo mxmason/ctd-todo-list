@@ -15,7 +15,8 @@
 		},
 		"composite": true,
 		"incremental": true,
-		"tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.app.tsbuildinfo"
+		"tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.app.tsbuildinfo",
+		"types": ["vite/client"]
 	},
 	"references": [{ "path": "../shared" }],
 	"include": ["src", ".storybook/preview.tsx"]
