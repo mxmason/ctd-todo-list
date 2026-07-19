@@ -33,6 +33,7 @@ export default defineConfig({
 			headless: true,
 			provider: playwright({}),
 			instances: [{ browser: "chromium" }],
+			screenshotFailures: false,
 		},
 		setupFiles: ["./src/test/setup.ts"],
 	},

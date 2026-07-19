@@ -19,6 +19,7 @@
 		"test": "concurrently \"npm:test:*\"",
 		"test:server": "npm test --workspace=server --if-present",
 		"test:client": "npm test --workspace=client --if-present",
+		"test:ui:client": "npm run test:ui --workspace=client --if-present",
 		"typecheck": "concurrently --raw \"npm:typecheck:* --silent\"",
 		"typecheck:server": "npm run typecheck --workspace=server",
 		"typecheck:client": "npm run typecheck --workspace=client",

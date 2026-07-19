@@ -15,6 +15,7 @@
 	},
 	"scripts": {
 		"test": "vitest run",
+		"test:ui": "vitest --ui --watch",
 		"dev": "vite --host",
 		"build": "vite build",
 		"preview": "vite preview",
