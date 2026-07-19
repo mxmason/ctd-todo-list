@@ -1,6 +1,6 @@
 import { setupWorker } from "msw/browser";
 import type { SetupWorker } from "msw/browser";
-import { beforeAll, afterEach } from "vitest";
+import { beforeAll, beforeEach, afterEach } from "vitest";
 
 import { handlers } from "./msw-handlers.ts";
 
@@ -18,8 +18,14 @@ export const worker = window.__mswWorker;
 
 beforeAll(async () => {
 	if (!navigator.serviceWorker.controller) {
-		await worker.start({ onUnhandledRequest: "bypass" });
+		await worker.start({
+			onUnhandledRequest: "bypass",
+			quiet: true,
+		});
 	}
+});
+
+beforeEach(() => {
 	document.cookie = "logged_in=1; Path=/; SameSite=Strict";
 });
 

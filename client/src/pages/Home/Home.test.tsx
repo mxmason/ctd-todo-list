@@ -6,6 +6,7 @@ import {
 	worker,
 	http,
 	HttpResponse,
+	vi,
 } from "#test";
 
 import { Home } from "./Home.tsx";
@@ -14,7 +15,9 @@ describe("Home", () => {
 	it("shows todos from the API", async () => {
 		const { getByText } = await render(<Home />);
 		await expect.element(getByText("Buy milk")).toBeVisible();
-		await expect.element(getByText(/walk the dog/i)).toBeVisible();
+		await vi.waitFor(() =>
+			expect.element(getByText("Walk the dog")).toBeVisible(),
+		);
 	});
 
 	it("shows empty list when the API returns no todos", async () => {

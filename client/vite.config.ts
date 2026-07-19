@@ -18,12 +18,15 @@ export default defineConfig({
 	],
 	server: {
 		port: 3000,
-		proxy: {
-			"/api": {
-				target: "http://localhost:3001",
-				changeOrigin: true,
-			},
-		},
+		proxy:
+			process.env.VITEST === "true"
+				? undefined
+				: {
+						"/api": {
+							target: "http://localhost:3001",
+							changeOrigin: true,
+						},
+					},
 	},
 	test: {
 		name: "browser",
@@ -36,5 +39,8 @@ export default defineConfig({
 			screenshotFailures: false,
 		},
 		setupFiles: ["./src/test/setup.ts"],
+		onConsoleLog(log) {
+			if (log.includes("[MSW]")) return false;
+		},
 	},
 });
