@@ -22,7 +22,8 @@ export const mockTodos: Todo[] = [
 ];
 
 // Default handlers shared across stories. Individual stories override
-// these via `parameters.msw.handlers` when they need a different response.
+// these via `beforeEach({ msw }) { msw.use(...) }` when they need a
+// different response.
 export const handlers = [
 	http.get("/api/users/me", () => HttpResponse.json(mockUser)),
 	http.get("/api/todos", () => HttpResponse.json(mockTodos)),

@@ -9,21 +9,17 @@ const meta = preview.meta({ component: Home, tags: ["ai-generated"] });
 export const WithTodos = meta.story({});
 
 export const Empty = meta.story({
-	parameters: {
-		msw: {
-			handlers: [http.get("/api/todos", () => HttpResponse.json([]))],
-		},
+	beforeEach({ msw }) {
+		msw.use(http.get("/api/todos", () => HttpResponse.json([])));
 	},
 });
 
 export const LoadError = meta.story({
-	parameters: {
-		msw: {
-			handlers: [
-				http.get("/api/todos", () =>
-					HttpResponse.json({ message: "Server error" }, { status: 500 }),
-				),
-			],
-		},
+	beforeEach({ msw }) {
+		msw.use(
+			http.get("/api/todos", () =>
+				HttpResponse.json({ message: "Server error" }, { status: 500 }),
+			),
+		);
 	},
 });

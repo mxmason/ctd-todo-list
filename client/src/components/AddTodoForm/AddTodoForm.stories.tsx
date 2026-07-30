@@ -18,14 +18,12 @@ export const SubmitsTitle = meta.story({
 });
 
 export const ShowsServerError = meta.story({
-	parameters: {
-		msw: {
-			handlers: [
-				http.post("/api/todos", () =>
-					HttpResponse.json({ message: "Title is required" }, { status: 400 }),
-				),
-			],
-		},
+	beforeEach({ msw }) {
+		msw.use(
+			http.post("/api/todos", () =>
+				HttpResponse.json({ message: "Title is required" }, { status: 400 }),
+			),
+		);
 	},
 	play: async ({ canvasElement }) => {
 		const canvas = within(canvasElement);

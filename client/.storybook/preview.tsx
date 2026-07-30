@@ -1,5 +1,6 @@
 import { definePreview } from "@storybook/react-vite";
-import { initialize, mswLoader } from "msw-storybook-addon";
+import addonMsw from "msw-storybook-addon";
+import { setupWorker } from "msw/browser";
 import { BrowserRouter } from "react-router";
 
 import { AuthProvider } from "#context/auth/AuthContext.tsx";
@@ -10,13 +11,17 @@ import { handlers } from "#test/msw-handlers.ts";
 // the /users/me request that MSW serves.
 document.cookie = "logged_in=1; Path=/; SameSite=Strict";
 
-// Pass handlers as initial handlers so resetHandlers() always restores the full
-// default set. Story-level parameters.msw.handlers are then prepended as
-// one-off overrides that take priority (first-match-wins).
-initialize({ onUnhandledRequest: "bypass" }, handlers);
+// Seed the worker with the default handlers so they're always restored
+// between stories. Story-level `beforeEach({ msw })` hooks then layer
+// one-off overrides on top via `msw.use(...)`.
+const setupMsw = async () => {
+	const worker = setupWorker(...handlers);
+	await worker.start({ onUnhandledRequest: "bypass" });
+	return worker;
+};
 
 export default definePreview({
-	addons: [],
+	addons: [addonMsw(setupMsw)],
 	decorators: [
 		(Story) => (
 			<BrowserRouter>
@@ -26,7 +31,6 @@ export default definePreview({
 			</BrowserRouter>
 		),
 	],
-	loaders: [mswLoader],
 	parameters: {
 		controls: {
 			matchers: {

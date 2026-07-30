@@ -6,6 +6,10 @@ export const AddTodoForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 	const [title, setTitle] = React.useState("");
 	const { data, error, loading, create } = useCreateTodo();
 
+	const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+		setTitle(evt.target.value);
+	};
+
 	const handleSubmit = async (evt: React.SubmitEvent) => {
 		evt.preventDefault();
 		const ok = await create(title);
@@ -22,7 +26,7 @@ export const AddTodoForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 				id="title"
 				type="text"
 				value={title}
-				onChange={(evt) => setTitle(evt.target.value)}
+				onChange={handleChange}
 				required
 			/>
 			<button disabled={loading} type="submit">
