@@ -32,13 +32,13 @@
 	"devDependencies": {
 		"@types/node": "24.13.3",
 		"@typescript/native": "npm:typescript@^7.0.2",
-		"concurrently": "10.0.3",
-		"eslint": "10.7.0",
+		"concurrently": "10.0.4",
+		"eslint": "10.8.0",
 		"husky": "9.1.7",
 		"nano-staged": "1.0.2",
-		"oxfmt": "0.59.0",
-		"oxlint": "1.74.0",
+		"oxfmt": "0.60.0",
+		"oxlint": "1.75.0",
 		"typescript": "npm:@typescript/typescript6@6.0.3",
-		"typescript-eslint": "8.64.0"
+		"typescript-eslint": "8.65.0"
 	}
 }

@@ -23,13 +23,13 @@
 		"db:flatten": "rm -rf prisma/migrations && prisma migrate reset --force && prisma migrate dev --name init"
 	},
 	"dependencies": {
-		"@prisma/adapter-pg": "7.8.0",
-		"@prisma/client": "7.8.0",
+		"@prisma/adapter-pg": "7.9.0",
+		"@prisma/client": "7.9.0",
 		"cors": "2.8.6",
 		"express": "5.2.1",
-		"google-auth-library": "10.9.0",
-		"jose": "6.2.3",
-		"prisma": "7.8.0",
+		"google-auth-library": "10.9.1",
+		"jose": "6.2.4",
+		"prisma": "7.9.0",
 		"shared": "*",
 		"zod": "4.4.3"
 	},
