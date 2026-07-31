@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import * as usersApi from "#api/users.ts";
-import { type Result } from "#api/utils.ts";
-import { type Credentials, type User } from "#shared/schemas";
+import { isApiError } from "#api/utils.ts";
+import * as usersHooks from "#hooks/users.ts";
+import { useUser } from "#hooks/users.ts";
 
 import { AuthContext } from "./context.ts";
 
@@ -13,49 +13,52 @@ function hasSessionIndicator(): boolean {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [user, setUser] = React.useState<User | null>(null);
-	const [isLoading, setIsLoading] = React.useState(hasSessionIndicator);
+	const [shouldFetchUser, setShouldFetchUser] =
+		React.useState(hasSessionIndicator);
+	const { user, error, loading, refetch } = useUser(shouldFetchUser);
 
 	React.useEffect(() => {
-		if (!hasSessionIndicator()) return;
+		// Only an HTTP-level auth failure means the session is invalid.
+		// A raw network/abort error (e.g. the Google OAuth popup's own
+		// AuthProvider instance getting its /me request cut off by
+		// `window.close()`) says nothing about session validity and must not
+		// wipe a cookie a concurrent successful login just set.
+		if (!isApiError(error)) return;
+		// Stale indicator (session expired/secret rotated) — clear it so the
+		// next page load doesn't make a wasted /me round-trip.
+		document.cookie = "logged_in=; Max-Age=0; Path=/; SameSite=Strict";
+	}, [error]);
 
-		usersApi.me().then((result) => {
-			if (result.error === null) {
-				setUser(result.data);
-			} else {
-				// Stale indicator (session expired/secret rotated) — clear it so the
-				// next page load doesn't make a wasted /me round-trip.
-				document.cookie = "logged_in=; Max-Age=0; Path=/; SameSite=Strict";
-			}
-			setIsLoading(false);
-		});
-	}, []);
+	const login: typeof usersHooks.login = async (creds) => {
+		const result = await usersHooks.login(creds);
+		if (result.error === null) setShouldFetchUser(true);
+		return result;
+	};
 
-	const login = async (creds: Credentials): Promise<Result<User>> => {
-		const result = await usersApi.login(creds);
-		if (result.error === null) setUser(result.data);
+	const register: typeof usersHooks.register = async (creds) => {
+		const result = await usersHooks.register(creds);
+		if (result.error === null) setShouldFetchUser(true);
 		return result;
 	};
 
 	const logout = async () => {
-		await usersApi.logout();
-		setUser(null);
+		await usersHooks.logout();
+		setShouldFetchUser(false);
 	};
 
-	const register = async (creds: Credentials): Promise<Result<User>> => {
-		const registerResult = await usersApi.register(creds);
-		if (registerResult.error !== null) return registerResult;
-		return login(creds);
-	};
-
+	// The Google OAuth popup sets the session cookie out-of-band, so this must
+	// force a re-fetch even when `shouldFetchUser` is already true.
 	const refreshUser = async () => {
-		const result = await usersApi.me();
-		if (result.error === null) setUser(result.data);
+		if (shouldFetchUser) {
+			await refetch();
+		} else {
+			setShouldFetchUser(true);
+		}
 	};
 
 	return (
 		<AuthContext
-			value={{ user, isLoading, login, logout, register, refreshUser }}
+			value={{ user, isLoading: loading, login, logout, register, refreshUser }}
 		>
 			{children}
 		</AuthContext>

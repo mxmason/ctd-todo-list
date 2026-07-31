@@ -3,6 +3,19 @@ export type Result<T> =
 	| { data: T; error: null }
 	| { data: null; error: ApiError };
 
+// Distinguishes an HTTP-level failure (returned by apiFetch below)
+// from a raw network exception (e.g. a fetch aborted by the page
+// unloading) — the two need different handling: only the former reflects
+// something the server has told us about the request.
+export function isApiError(error: unknown): error is ApiError {
+	return (
+		typeof error === "object" &&
+		error !== null &&
+		"status" in error &&
+		"message" in error
+	);
+}
+
 export async function apiFetch<T>(
 	path: string,
 	options?: RequestInit,

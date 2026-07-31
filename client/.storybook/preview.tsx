@@ -2,6 +2,7 @@ import { definePreview } from "@storybook/react-vite";
 import addonMsw from "msw-storybook-addon";
 import { setupWorker } from "msw/browser";
 import { BrowserRouter } from "react-router";
+import { SWRConfig } from "swr";
 
 import { AuthProvider } from "#context/auth/AuthContext.tsx";
 import { handlers } from "#test/msw-handlers.ts";
@@ -24,11 +25,13 @@ export default definePreview({
 	addons: [addonMsw(setupMsw)],
 	decorators: [
 		(Story) => (
-			<BrowserRouter>
-				<AuthProvider>
-					<Story />
-				</AuthProvider>
-			</BrowserRouter>
+			<SWRConfig value={{ provider: () => new Map() }}>
+				<BrowserRouter>
+					<AuthProvider>
+						<Story />
+					</AuthProvider>
+				</BrowserRouter>
+			</SWRConfig>
 		),
 	],
 	parameters: {
