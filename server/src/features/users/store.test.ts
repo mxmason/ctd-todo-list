@@ -1,9 +1,7 @@
 import { randomUUID } from "node:crypto";
 
-import { describe, expect, test } from "vitest";
-
 import { isAppError } from "#lib/app-error.ts";
-import { useTestDb } from "#test/db.ts";
+import { describe, expect, test, useTestDb } from "#test/test-utils.ts";
 
 import { createLocalUser, findUserById, findUserByUsername } from "./store.ts";
 

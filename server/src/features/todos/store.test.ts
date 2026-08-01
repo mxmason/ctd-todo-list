@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 
-import { describe, expect, test } from "vitest";
-
 import { prisma } from "#lib/prisma.ts";
-import { seedUserSession, useTestDb } from "#test/db.ts";
+import {
+	describe,
+	expect,
+	seedUserSession,
+	test,
+	useTestDb,
+} from "#test/test-utils.ts";
 
 import {
 	createManyTodos,

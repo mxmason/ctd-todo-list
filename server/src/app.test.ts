@@ -1,6 +1,4 @@
-import { describe, expect, test } from "vitest";
-
-import { api } from "#test/helpers.ts";
+import { api, describe, expect, test } from "#test/test-utils.ts";
 
 describe("routing", () => {
 	test("404s on unknown routes", async () => {

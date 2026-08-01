@@ -1,5 +1,6 @@
 import { SignJWT } from "jose";
-import { afterEach, describe, expect, test, vi } from "vitest";
+
+import { afterEach, describe, expect, test, vi } from "#test/test-utils.ts";
 
 import {
 	hashPassword,

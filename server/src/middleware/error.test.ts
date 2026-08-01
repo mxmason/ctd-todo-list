@@ -1,15 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import { describe, expect, test, vi } from "vitest";
 
 import { AppError } from "#lib/app-error.ts";
+import { describe, expect, mockRes, test, vi } from "#test/test-utils.ts";
 
 import { errorHandler } from "./error.ts";
-
-const mockRes = () => {
-	const json = vi.fn();
-	const status = vi.fn().mockReturnValue({ json });
-	return { status, json, headersSent: false };
-};
 
 const req = {} as unknown as Request;
 

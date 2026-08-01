@@ -1,5 +1,10 @@
-import type { Request } from "express";
-import { afterEach, describe, expect, test } from "vitest";
+import {
+	afterEach,
+	describe,
+	expect,
+	mockReq as req,
+	test,
+} from "#test/test-utils.ts";
 
 import {
 	buildIndicatorCookie,
@@ -8,9 +13,6 @@ import {
 	clearSessionCookie,
 	readSessionCookie,
 } from "./cookie.ts";
-
-const req = (cookie?: string) =>
-	({ headers: { cookie } }) as unknown as Request;
 
 function assertCommonAttrs(getCookie: () => string) {
 	test("has SameSite=Strict, Path=/, and Max-Age=3600", () => {
@@ -73,22 +75,30 @@ describe("clearIndicatorCookie", () => {
 
 describe("readSessionCookie", () => {
 	test("returns the token value for a valid session cookie", () => {
-		expect(readSessionCookie(req("session=mytoken"))).toBe("mytoken");
+		expect(
+			readSessionCookie(req({ headers: { cookie: "session=mytoken" } })),
+		).toBe("mytoken");
 	});
 
 	test("returns null when headers.cookie is undefined", () => {
-		expect(readSessionCookie(req())).toBeNull();
+		expect(readSessionCookie(req({ headers: {} }))).toBeNull();
 	});
 
 	test("returns null when session key is absent", () => {
-		expect(readSessionCookie(req("foo=bar; baz=qux"))).toBeNull();
+		expect(
+			readSessionCookie(req({ headers: { cookie: "foo=bar; baz=qux" } })),
+		).toBeNull();
 	});
 
 	test("finds session among multiple cookies", () => {
-		expect(readSessionCookie(req("foo=bar; session=tok; baz=qux"))).toBe("tok");
+		expect(
+			readSessionCookie(
+				req({ headers: { cookie: "foo=bar; session=tok; baz=qux" } }),
+			),
+		).toBe("tok");
 	});
 
 	test("returns null for an empty cookie header", () => {
-		expect(readSessionCookie(req(""))).toBeNull();
+		expect(readSessionCookie(req({ headers: { cookie: "" } }))).toBeNull();
 	});
 });

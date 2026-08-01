@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { vi } from "vitest";
+
+import {
+	afterEach,
+	describe,
+	expect,
+	stubEnv,
+	test,
+} from "#test/test-utils.ts";
 
 const jwtVerify = vi.fn();
 vi.mock("jose", () => ({
@@ -6,16 +14,13 @@ vi.mock("jose", () => ({
 	jwtVerify: (...args: unknown[]) => jwtVerify(...args),
 }));
 
-const originalEnv = { ...process.env };
-
-beforeEach(() => {
-	process.env.GOOGLE_CLIENT_ID = "test-client-id";
-	process.env.GOOGLE_CLIENT_SECRET = "test-client-secret";
-	process.env.GOOGLE_REDIRECT_URI = "https://app.example.com/callback";
+stubEnv({
+	GOOGLE_CLIENT_ID: "test-client-id",
+	GOOGLE_CLIENT_SECRET: "test-client-secret",
+	GOOGLE_REDIRECT_URI: "https://app.example.com/callback",
 });
 
 afterEach(() => {
-	process.env = { ...originalEnv };
 	vi.unstubAllGlobals();
 	jwtVerify.mockReset();
 });

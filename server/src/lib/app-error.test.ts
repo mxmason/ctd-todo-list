@@ -1,5 +1,6 @@
-import { describe, expect, test } from "vitest";
 import { z } from "zod";
+
+import { describe, expect, test } from "#test/test-utils.ts";
 
 import { AppError, isAppError, validate } from "./app-error.ts";
 

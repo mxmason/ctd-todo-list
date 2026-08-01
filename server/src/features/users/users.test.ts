@@ -1,15 +1,12 @@
-import { describe, expect, test } from "vitest";
-
-import { useTestDb } from "#test/db.ts";
-import { agent as makeAgent, api } from "#test/helpers.ts";
-
-// useTestDb truncates between tests, but a unique username per call keeps tests
-// that register more than once self-contained.
-let counter = 0;
-function freshUser() {
-	counter += 1;
-	return { username: `user${counter}`, password: "supersecret" };
-}
+import {
+	agent as makeAgent,
+	api,
+	describe,
+	expect,
+	freshUser,
+	test,
+	useTestDb,
+} from "#test/test-utils.ts";
 
 describe("users", () => {
 	useTestDb();
