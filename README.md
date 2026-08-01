@@ -9,7 +9,7 @@ A full-stack todo application. TypeScript monorepo with an Express API and a Rea
 | Frontend | React 19, React Router 7, Vite 8, CSS Modules |
 | Backend  | Node 20+, Express 5, Prisma 7                 |
 | Database | PostgreSQL                                    |
-| Language | TypeScript 6                                  |
+| Language | TypeScript                                    |
 | Testing  | Vitest                                        |
 
 ## Project Structure
@@ -19,22 +19,31 @@ ctd-todo-list/
 ├── client/      # React frontend (Vite)
 ├── server/      # Express API (Prisma + Postgres)
 ├── shared/      # Types and utilities shared between workspaces
+├── scripts/     # Scripts for dev/test/build tasks (run via `npm run <script>`)
 └── package.json # Root workspace — dev/build/test scripts run both
 ```
 
 ## Prerequisites
 
-- **Node.js** ≥ 20.19 (`node --version`)
+- **Node.js** ≥ 24.18 (`node --version`)
 - **PostgreSQL** 14+ (see setup below)
 
 ### PostgreSQL setup
 
-**Install** (macOS via Homebrew):
+This project requires PostgreSQL version 14 or later. If you don't have Postgrres installed, we recommend starting with version 18 (the latest stable release at the time of writing). On macOS, you can install it via Homebrew:
 
 ```bash
-brew install postgresql@16
-brew services start postgresql@16
+# Install and start Postgres 18 via Homebrew
+# You may skip these steps if you already have Postgres installed and running
+brew install postgresql@18
+brew services start postgresql@18
+# Create the `Postgres` role if it doesn't already exist
+# and set up the project's databases (see below)
+npm run setup
 ```
+
+<details>
+<summary>Manual role/database creation (if you'd rather not use <code>npm run setup</code>, or it fails)</summary>
 
 **Create a user** matching the credentials in `.env.example` (`postgres` / `postgres`):
 
@@ -56,6 +65,8 @@ CREATE DATABASE ctd_todo_list_test OWNER postgres;
 \q
 ```
 
+</details>
+
 ## Dev Setup
 
 1. **Install dependencies**
@@ -64,22 +75,15 @@ CREATE DATABASE ctd_todo_list_test OWNER postgres;
    npm install
    ```
 
-2. **Configure environment**
+2. **Run setup**
 
    ```bash
-   cp server/.env.example server/.env
-   # Edit server/.env if your Postgres credentials differ from the defaults
+   npm run setup
    ```
 
-   This file is read by both the Prisma CLI and the dev server (`node --env-file`).
+   This creates `server/.env` (read by both the Prisma CLI and the dev server via `node --env-file`) from `server/.env.example` if it doesn't already exist, creates the `postgres` role and the `ctd_todo_list` / `ctd_todo_list_test` databases if they don't already exist, and runs migrations. It's idempotent, so re-running it is safe. If your Postgres credentials differ from the defaults, edit `server/.env` after it's created and re-run `npm run setup`.
 
-3. **Run migrations**
-
-   ```bash
-   npm run db:migrate --workspace=server
-   ```
-
-4. **Start the dev servers**
+3. **Start the dev servers**
 
    ```bash
    npm run dev
@@ -92,29 +96,37 @@ CREATE DATABASE ctd_todo_list_test OWNER postgres;
 
 All env vars live in `server/.env` (loaded via `node --env-file`). See [server/.env.example](server/.env.example) for the full reference.
 
-| Variable            | Required        | Default                                                            | Description                        |
-| ------------------- | --------------- | ------------------------------------------------------------------ | ---------------------------------- |
-| `DATABASE_URL`      | Yes             | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list`      | Main Postgres connection string    |
-| `TEST_DATABASE_URL` | For tests       | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list_test` | Separate DB used by the test suite |
-| `AUTH_SECRET`       | Production only | random ephemeral                                                   | Secret for signing session JWTs    |
-| `PORT`              | No              | `3001`                                                             | Port the API listens on            |
-| `CLIENT_ORIGIN`     | No              | `http://localhost:3000`                                            | Allowed CORS origin                |
+| Variable               | Required         | Default                                                            | Description                                           |
+| ---------------------- | ---------------- | ------------------------------------------------------------------ | ----------------------------------------------------- |
+| `DATABASE_URL`         | Yes              | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list`      | Main Postgres connection string                       |
+| `TEST_DATABASE_URL`    | For tests        | `postgresql://postgres:postgres@localhost:5432/ctd_todo_list_test` | Separate DB used by the test suite                    |
+| `AUTH_SECRET`          | Production only  | random ephemeral                                                   | Secret for signing session JWTs                       |
+| `PORT`                 | No               | `3001`                                                             | Port the API listens on                               |
+| `CLIENT_ORIGIN`        | No               | `http://localhost:3000`                                            | Allowed CORS origin                                   |
+| `GOOGLE_CLIENT_ID`     | For Google login | unset                                                              | OAuth 2.0 client ID from the Google Cloud Console     |
+| `GOOGLE_CLIENT_SECRET` | For Google login | unset                                                              | OAuth 2.0 client secret from the Google Cloud Console |
+| `GOOGLE_REDIRECT_URI`  | For Google login | `http://localhost:3001/api/auth/google/callback`                   | Redirect URI registered on the OAuth client           |
+
+> Google sign-in is optional in development — without the three `GOOGLE_*` vars set, the app runs but Google login won't work. See [server/.env.example](server/.env.example).
 
 ## Available Scripts
 
 All scripts run from the repo root unless noted.
 
-| Script                                   | Description                                       |
-| ---------------------------------------- | ------------------------------------------------- |
-| `npm run dev`                            | Start API and client in watch mode (concurrently) |
-| `npm run build`                          | Build client for production                       |
-| `npm test`                               | Run all test suites                               |
-| `npm run typecheck`                      | Type-check all workspaces                         |
-| `npm run lint`                           | Lint and auto-fix all workspaces                  |
-| `npm run db:migrate --workspace=server`  | Run pending Prisma migrations                     |
-| `npm run db:generate --workspace=server` | Regenerate Prisma client after schema changes     |
-| `npm run db:studio --workspace=server`   | Open Prisma Studio (DB browser)                   |
-| `npm run db:deploy --workspace=server`   | Apply migrations in production (no prompts)       |
+| Script                                   | Description                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `npm run setup`                          | One-time dev setup: env file, Postgres role/databases, migrations (idempotent) |
+| `npm run dev`                            | Start API and client in watch mode (concurrently)                              |
+| `npm run build`                          | Build client for production                                                    |
+| `npm test`                               | Run all test suites                                                            |
+| `npm run typecheck`                      | Type-check all workspaces                                                      |
+| `npm run lint`                           | Lint and auto-fix all workspaces                                               |
+| `npm run storybook`                      | Start Storybook for the client workspace                                       |
+| `npm run ui:client`                      | Run client tests in the Vitest UI (watch mode)                                 |
+| `npm run db:migrate --workspace=server`  | Run pending Prisma migrations                                                  |
+| `npm run db:generate --workspace=server` | Regenerate Prisma client after schema changes                                  |
+| `npm run db:studio --workspace=server`   | Open Prisma Studio (DB browser)                                                |
+| `npm run db:deploy --workspace=server`   | Apply migrations in production (no prompts)                                    |
 
 > **Deployment note:** `prisma` (the CLI) is a devDependency. `db:deploy` must run in an environment where devDependencies are installed, or where the `prisma` package is available by other means. A plain `npm install --omit=dev` followed by `db:deploy` will fail.
 
