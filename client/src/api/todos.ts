@@ -17,6 +17,6 @@ export const setTodoCompleted = (id: string, completed: boolean) =>
 	});
 
 export const deleteTodo = (id: string) =>
-	apiFetch(`/todos/${id}`, {
+	apiFetch<Todo | null>(`/todos/${id}`, {
 		method: "DELETE",
 	});
