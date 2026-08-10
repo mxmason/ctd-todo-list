@@ -5,7 +5,12 @@
  */
 
 /** @param {NanoStagedApi} api */
-const oxfmt = ({ filenames }) => `oxfmt ${filenames.join(" ")}`;
+const oxfmt = ({ filenames }) => {
+	const filtered = filenames.filter(
+		(f) => !f.endsWith("-lock.json") && !f.endsWith(".lock"),
+	);
+	return filtered.length > 0 ? `oxfmt ${filtered.join(" ")}` : [];
+};
 /** @param {NanoStagedApi} api */
 const oxlint = ({ filenames }) => `oxlint --fix ${filenames.join(" ")}`;
 /** @param {NanoStagedApi} api */
