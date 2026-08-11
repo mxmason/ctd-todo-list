@@ -1,0 +1,55 @@
+pre-commit:
+  commands:
+    # Typecheck (per-workspace, no file modification)
+    server-typecheck:
+      glob: "server/src/**/*.{ts,tsx}"
+      run: tsc -b server/tsconfig.json
+    client-typecheck:
+      glob: "client/src/**/*.{ts,tsx}"
+      run: tsc -b client/tsconfig.json
+    shared-typecheck:
+      glob: "shared/src/**/*.{ts,tsx}"
+      run: tsc -b shared/tsconfig.json
+
+    # Linting: oxlint --fix (per-workspace, disjoint file sets)
+    server-oxlint:
+      glob: "server/src/**/*.{ts,tsx}"
+      run: oxlint --fix {staged_files}
+      stage_fixed: true
+    client-oxlint:
+      glob: "client/src/**/*.{ts,tsx}"
+      run: oxlint --fix {staged_files}
+      stage_fixed: true
+    shared-oxlint:
+      glob: "shared/src/**/*.{ts,tsx}"
+      run: oxlint --fix {staged_files}
+      stage_fixed: true
+
+    # Linting: eslint --fix (per-workspace, disjoint file sets)
+    server-eslint:
+      glob: "server/src/**/*.{ts,tsx}"
+      run: eslint --cache --fix {staged_files}
+      stage_fixed: true
+    client-eslint:
+      glob: "client/src/**/*.{ts,tsx}"
+      run: eslint --cache --fix {staged_files}
+      stage_fixed: true
+    shared-eslint:
+      glob: "shared/src/**/*.{ts,tsx}"
+      run: eslint --cache --fix {staged_files}
+      stage_fixed: true
+
+    # Formatting: runs sequentially after linting to avoid write-write races
+    # (operates on all staged files, so must not overlap with linting)
+    format:
+      glob: "**/*.{js,ts,tsx,json}"
+      exclude: '(^|/).*(-lock\.json|\.lock)$'
+      run: oxfmt {staged_files}
+      stage_fixed: true
+
+pre-push:
+  commands:
+    related-tests:
+      env:
+        NODE_COMPILE_CACHE: "./node_modules/.cache"
+      run: node .lefthook/pre-push.mjs

@@ -35,13 +35,23 @@ async function filesForRef({ localSha, remoteSha }) {
 	return changedFiles(base, localSha);
 }
 
-const refs = readFileSync(0, "utf8")
-	.split("\n")
-	.filter(Boolean)
-	.map((line) => {
-		const [localRef, localSha, remoteRef, remoteSha] = line.split(" ");
-		return { localRef, localSha, remoteRef, remoteSha };
-	});
+let refs;
+try {
+	refs = readFileSync(0, "utf8")
+		.split("\n")
+		.filter(Boolean)
+		.map((line) => {
+			const [localRef, localSha, remoteRef, remoteSha] = line.split(" ");
+			return { localRef, localSha, remoteRef, remoteSha };
+		});
+} catch (err) {
+	// Fallback if stdin unavailable: assume push to origin/HEAD of current branch
+	const branch = await git(["rev-parse", "--abbrev-ref", "HEAD"]);
+	const localSha = await git(["rev-parse", "HEAD"]);
+	const remoteRef = `refs/heads/${branch}`;
+	const remoteSha = await git(["rev-parse", `origin/${branch}`]) || "0".repeat(40);
+	refs = [{ localRef: `refs/heads/${branch}`, localSha, remoteRef, remoteSha }];
+}
 
 const lists = await Promise.all(refs.map(filesForRef));
 const allChanged = new Set(lists.flat());
